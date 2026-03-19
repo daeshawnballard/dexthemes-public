@@ -1,0 +1,737 @@
+/* DexThemes — sidebar, search, categories, and auth surfaces */
+/* ================================================
+   SIDEBAR
+   ================================================ */
+
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  padding-top: 48px;
+  -webkit-app-region: drag;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.sidebar-header {
+  padding: 0 14px 12px;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.sidebar-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-name {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  transition: color var(--transition);
+}
+
+.sidebar-brand-sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: -1px;
+  transition: color var(--transition);
+}
+
+.new-chat-btn {
+  width: 100%;
+  padding: 7px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s, border-color 0.15s, color var(--transition), transform 0.1s;
+  -webkit-app-region: no-drag;
+}
+
+.new-chat-btn:hover {
+  background: var(--surface-raised);
+  border-color: var(--border-strong);
+}
+
+.new-chat-btn:active {
+  transform: scale(0.98);
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 14px 4px;
+  transition: background var(--transition);
+}
+
+/* (Search styles moved to SEARCH BAR WITH FILTERS section) */
+
+/* ================================================
+   SEARCH BAR WITH FILTERS
+   ================================================ */
+
+.search-bar-wrapper {
+  position: relative;
+  margin: 4px 14px 8px;
+  -webkit-app-region: no-drag;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), border-color 0.15s;
+}
+
+.search-bar:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-dim);
+}
+
+.search-bar svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--transition);
+}
+
+.search-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: var(--font);
+  min-width: 0;
+}
+
+.search-bar input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.search-filter-btn,
+.search-sort-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  padding: 0;
+  position: relative;
+}
+
+.search-filter-btn:hover,
+.search-sort-btn:hover {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+}
+
+.search-filter-btn.has-filter,
+.search-sort-btn.has-sort {
+  color: var(--accent);
+}
+
+/* Dropdown menu (shared between filter & sort) */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 160px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 10;
+  padding: 4px;
+  display: none;
+  animation: dropdownIn 0.12s ease;
+}
+
+.search-dropdown.open {
+  display: block;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 6px 10px 4px;
+  font-weight: 600;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font);
+  transition: background 0.1s, color 0.1s;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+
+.dropdown-item.active {
+  color: var(--accent);
+}
+
+.dropdown-item .check {
+  width: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 6px;
+}
+
+/* ================================================
+   CATEGORIES (Projects) + THREADS
+   ================================================ */
+
+.category-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+  -webkit-app-region: no-drag;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.06) transparent;
+}
+
+.category-list::-webkit-scrollbar { width: 4px; }
+.category-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
+
+.category {
+  margin-bottom: 2px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.12s, color var(--transition);
+  user-select: none;
+}
+
+.category-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.category-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  opacity: 0.5;
+}
+
+.category-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.category-icon {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.category-name {
+}
+
+.category-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--surface);
+  padding: 1px 0;
+  border-radius: 10px;
+  margin-left: auto;
+  min-width: 24px;
+  text-align: center;
+  transition: background var(--transition), color var(--transition);
+}
+
+.category-threads {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.category-threads.expanded {
+  max-height: 1200px;
+}
+
+.thread-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px 5px 36px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.thread-item:active {
+  transform: scale(0.99);
+}
+
+.thread-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.thread-item.active {
+  background: var(--accent-dim);
+}
+
+.thread-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.thread-title {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition);
+}
+
+.thread-item.active .thread-title {
+  color: var(--accent);
+}
+
+.thread-item.active .selection-indicator {
+  display: inline-flex;
+  align-items: center;
+}
+
+.thread-lock-icon {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.thread-item--locked .thread-title {
+  opacity: 0.7;
+}
+
+.thread-empty {
+  padding: 8px 14px 8px 36px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.thread-group {
+  padding: 6px 0 4px;
+}
+
+.thread-group + .thread-group {
+  margin-top: 2px;
+}
+
+.thread-group-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 2px 4px 30px;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+}
+
+.thread-group-toggle:hover {
+  color: var(--text-secondary);
+}
+
+.thread-group-toggle.is-pinned {
+  color: var(--text-secondary);
+}
+
+.thread-group-chevron {
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: transform 0.18s ease;
+}
+
+.thread-group-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.thread-group-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.72;
+  flex: 1;
+}
+
+.thread-group-count {
+  font-size: 10px;
+  padding: 1px 0;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-muted);
+  min-width: 24px;
+  text-align: center;
+}
+
+.thread-group-pin {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.thread-group-pin.visible {
+  opacity: 0.85;
+}
+
+.thread-group-items {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.22s ease;
+}
+
+.thread-group-items.expanded {
+  max-height: 1200px;
+}
+
+.sidebar-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  transition: border-color var(--transition);
+}
+
+.sidebar-footer-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidebar-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  transition: color var(--transition);
+}
+
+.github-footer-link {
+  color: var(--text-muted);
+  transition: color 0.15s;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.github-footer-link:hover {
+  color: var(--text-secondary);
+}
+
+.footer-credit-link {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.footer-credit-link:hover {
+  opacity: 0.8;
+}
+
+.sidebar-footer-disclaimer {
+  font-size: 9px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  margin-top: 4px;
+  line-height: 1.3;
+  transition: color var(--transition);
+}
+
+
+/* ================================================
+   AUTH UI
+   ================================================ */
+
+.sidebar-auth-row {
+  margin-bottom: 4px;
+}
+
+.auth-user-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--surface-raised, rgba(255,255,255,0.04));
+  border: 1px solid var(--border);
+}
+
+.auth-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.auth-username {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-signout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.auth-signout-btn:hover {
+  color: var(--text-secondary);
+}
+
+/* Sidebar user (footer) */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  margin: 0 0 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.sidebar-user:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.sidebar-signin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  margin: 0 0 2px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.sidebar-signin:hover {
+  color: var(--text-secondary);
+}
+
+.sidebar-signin svg {
+  opacity: 0.5;
+}
+
+.sidebar-user-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.sidebar-user-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-user-chevron {
+  flex-shrink: 0;
+  color: var(--text-tertiary, #666);
+  transition: transform 0.15s;
+}
+
+.sidebar-user-menu {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface-raised, #1e1e1e);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 10;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.25);
+}
+
+.sidebar-user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sidebar-user-menu-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+
+.auth-signin-row {
+  position: relative;
+}
+
+.auth-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.auth-signin-btn:hover {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.auth-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--surface-raised, #1e1e1e);
+  border: 1px solid var(--border-strong, #3a3a3a);
+  border-radius: 10px;
+  padding: 4px;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.auth-provider-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: all 0.1s;
+}
+
+.auth-provider-btn:hover {
+  background: var(--surface-hover, rgba(255,255,255,0.06));
+  color: var(--text-primary);
+}
+
+.auth-provider-btn svg {
+  flex-shrink: 0;
+}
+

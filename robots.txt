@@ -1,0 +1,7 @@
+# DexThemes — Theme gallery for Codex
+# https://dexthemes.com
+
+User-agent: *
+Allow: /
+
+Sitemap: https://dexthemes.com/sitemap.xml

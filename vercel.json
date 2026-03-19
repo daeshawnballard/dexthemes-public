@@ -1,0 +1,123 @@
+{
+  "outputDirectory": ".",
+  "crons": [
+    {
+      "path": "/api/warm-cache",
+      "schedule": "0 6 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/auth/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/auth/:path*"
+    },
+    {
+      "source": "/themes",
+      "destination": "https://acrobatic-corgi-867.convex.site/themes"
+    },
+    {
+      "source": "/themes/dexthemes/:subgroup",
+      "destination": "/api/themes-subgroup?subgroup=:subgroup"
+    },
+    {
+      "source": "/themes/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/themes/:path*"
+    },
+    {
+      "source": "/unlocks/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/unlocks/:path*"
+    },
+    {
+      "source": "/supporters",
+      "destination": "https://acrobatic-corgi-867.convex.site/supporters"
+    },
+    {
+      "source": "/supporters/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/supporters/:path*"
+    },
+    {
+      "source": "/leaderboard",
+      "destination": "https://acrobatic-corgi-867.convex.site/leaderboard"
+    },
+    {
+      "source": "/me/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/me/:path*"
+    },
+    {
+      "source": "/color-me-lucky/:path*",
+      "destination": "https://acrobatic-corgi-867.convex.site/color-me-lucky/:path*"
+    },
+    {
+      "source": "/:theme/:variant",
+      "destination": "/api/share?theme=:theme&variant=:variant"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/dist/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.svg$",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/(manifest\\.json|icon-192\\.png|apple-touch-icon\\.png)$",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/api/og",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/api/share",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" }
+      ]
+    },
+    {
+      "source": "/api/themes",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}

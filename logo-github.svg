@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="dg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <!-- Solid dark background for GitHub -->
+  <rect width="64" height="64" rx="14" fill="#1a1a2e"/>
+  <!-- Stacked D layers — optically centered -->
+  <path d="M24 17h11c7.7 0 14 6.3 14 14s-6.3 14-14 14H24V17zm7 6v16h4c4.4 0 8-3.6 8-8s-3.6-8-8-8h-4z" fill="url(#dg)" opacity="0.15"/>
+  <path d="M22.5 15.5h11c7.7 0 14 6.3 14 14s-6.3 14-14 14h-11V15.5zm7 6v16h4c4.4 0 8-3.6 8-8s-3.6-8-8-8h-4z" fill="url(#dg)" opacity="0.3"/>
+  <path d="M21.25 14.25h11c7.7 0 14 6.3 14 14s-6.3 14-14 14h-11V14.25zm7 6v16h4c4.4 0 8-3.6 8-8s-3.6-8-8-8h-4z" fill="url(#dg)" opacity="0.5"/>
+  <path d="M20 13h11c7.7 0 14 6.3 14 14s-6.3 14-14 14H20V13zm7 6v16h4c4.4 0 8-3.6 8-8s-3.6-8-8-8h-4z" fill="url(#dg)"/>
+</svg>

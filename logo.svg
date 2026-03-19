@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Mask: outer D visible, inner D cut out -->
+    <mask id="d-ring">
+      <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z" fill="white"/>
+      <path d="M29 22h2.5c4.8 0 8.5 3.9 8.5 9s-3.7 9-8.5 9H29V22Z" fill="black"/>
+    </mask>
+    <clipPath id="d-clip">
+      <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z"/>
+    </clipPath>
+  </defs>
+  <!-- D shape with hollow center — fully transparent background -->
+  <g mask="url(#d-ring)">
+    <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z" fill="currentColor"/>
+    <g clip-path="url(#d-clip)">
+      <rect x="19.5" y="18.75" width="15.75" height="6.25" rx="3.125" fill="#47adff"/>
+      <rect x="21.75" y="28.75" width="18.75" height="6.25" rx="3.125" fill="#8b5cf6"/>
+      <rect x="19.75" y="38.75" width="16.75" height="6.25" rx="3.125" fill="#f15bb5"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,677 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "DexThemes API",
+    "description": "Browse, generate, and submit themes for Codex. Browser users authenticate with the DexThemes session cookie after OAuth sign-in; agents and scripts authenticate with a dxt_ API key from POST /auth/agent.",
+    "version": "1.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://acrobatic-corgi-867.convex.site"
+    }
+  ],
+  "paths": {
+    "/themes": {
+      "get": {
+        "operationId": "listThemes",
+        "summary": "List all themes across the DexThemes catalog",
+        "description": "Returns the merged Codex, DexThemes, and published Community theme catalog. No authentication required.",
+        "responses": {
+          "200": {
+            "description": "Array of all themes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Theme" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "submitTheme",
+        "summary": "Submit a new community theme",
+        "description": "Submit a theme to the DexThemes community gallery. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "themeId": { "type": "string", "description": "Unique theme identifier (slug). Falls back to 'id' field if not provided." },
+                  "id": { "type": "string", "description": "Alternative to themeId" },
+                  "name": { "type": "string", "description": "Display name for the theme" },
+                  "summary": { "type": "string", "description": "Short description (defaults to name)" },
+                  "dark": { "$ref": "#/components/schemas/ThemeVariant" },
+                  "light": { "$ref": "#/components/schemas/ThemeVariant" },
+                  "accents": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Accent colors (hex). Auto-derived from variants if omitted."
+                  },
+                  "codeThemeId": {
+                    "type": "object",
+                    "properties": {
+                      "dark": { "type": "string" },
+                      "light": { "type": "string" }
+                    },
+                    "description": "Code syntax theme IDs. Defaults to codex/codex."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Theme submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "theme": { "type": "object", "description": "The created theme record" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/themes/community": {
+      "get": {
+        "operationId": "listCommunityThemes",
+        "summary": "List published community themes",
+        "description": "Returns all published community-submitted themes. No authentication required.",
+        "responses": {
+          "200": {
+            "description": "Array of published community themes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Theme" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes/like": {
+      "post": {
+        "operationId": "toggleLike",
+        "summary": "Toggle like on a theme",
+        "description": "Like or unlike a theme. Calling again on the same theme toggles the like off. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["themeId"],
+                "properties": {
+                  "themeId": { "type": "string", "description": "ID of the theme to like/unlike" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Like toggled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "liked": { "type": "boolean", "description": "Whether the theme is now liked" },
+                    "count": { "type": "integer", "description": "Updated like count for the theme" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/themes/likes/counts": {
+      "get": {
+        "operationId": "getLikeCounts",
+        "summary": "Get like counts for all themes",
+        "description": "Returns a map of theme IDs to their like counts. No authentication required.",
+        "responses": {
+          "200": {
+            "description": "Like counts by theme ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "type": "integer" },
+                  "description": "Object mapping theme IDs to like counts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes/copy": {
+      "post": {
+        "operationId": "incrementCopyCount",
+        "summary": "Increment the copy counter for a theme",
+        "description": "Record that a theme was copied/installed. Requires authentication to prevent abuse.",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["themeId"],
+                "properties": {
+                  "themeId": { "type": "string", "description": "ID of the theme that was copied" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Copy count incremented",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "copies": { "type": "integer", "description": "Updated copy count" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": {
+            "description": "Theme not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes/flag": {
+      "post": {
+        "operationId": "flagTheme",
+        "summary": "Flag a theme for review",
+        "description": "Report a theme for moderation review. Each user can only flag a given theme once. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["themeId", "reason"],
+                "properties": {
+                  "themeId": { "type": "string", "description": "ID of the theme to flag" },
+                  "reason": { "type": "string", "description": "Reason for flagging" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Theme flagged successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "409": {
+            "description": "Already flagged by this user",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/agent": {
+      "post": {
+        "operationId": "registerAgent",
+        "summary": "Register an agent and get an API key",
+        "description": "Agents can self-register to get a dxt_ API key for authenticated actions like submitting and liking themes. No OAuth required. The API key is shown only once.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string", "description": "A name for the agent (e.g. 'My Codex Agent')" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API key created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "apiKey": { "type": "string", "description": "The API key (dxt_ prefix). Save it -- shown only once." },
+                    "agentId": { "type": "string" },
+                    "message": { "type": "string" },
+                    "docs": { "type": "string", "description": "Link to documentation" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "getCurrentUser",
+        "summary": "Get the current authenticated user",
+        "description": "Returns the user profile for the current browser session or API key.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "End the current session",
+        "description": "Invalidates the current browser session. API keys are not affected. Always returns success even if no session is present.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/api-key": {
+      "post": {
+        "operationId": "generateApiKey",
+        "summary": "Generate a new API key",
+        "description": "Generate a dxt_ API key for the current user. Requires an authenticated browser session. The key is shown only once.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "API key generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "apiKey": { "type": "string", "description": "The new dxt_ API key. Save it -- shown only once." }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized -- authenticated browser session required (API keys cannot generate other API keys)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "revokeApiKey",
+        "summary": "Revoke your API key",
+        "description": "Revokes the current user's API key. Requires an authenticated browser session.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "API key revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized -- authenticated browser session required",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me/stats": {
+      "get": {
+        "operationId": "getMyStats",
+        "summary": "Get your submission stats",
+        "description": "Returns statistics about your submitted themes (counts, total copies, total likes, etc.).",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Creator stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalThemes": { "type": "integer" },
+                    "totalCopies": { "type": "integer" },
+                    "totalLikes": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/me/likes": {
+      "get": {
+        "operationId": "getMyLikes",
+        "summary": "Get theme IDs you have liked",
+        "description": "Returns the list of theme IDs the current user has liked.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of liked theme IDs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "likes": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Array of theme IDs the user has liked"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/color-me-lucky": {
+      "get": {
+        "operationId": "generateRandomTheme",
+        "summary": "Generate a random harmonious theme",
+        "description": "Creates a random theme using color harmony theory (complementary, analogous, triadic, etc.). Returns colors and a ready-to-paste import string for Codex. No authentication required.",
+        "parameters": [
+          {
+            "name": "variant",
+            "in": "query",
+            "description": "Theme variant (default: dark)",
+            "schema": { "type": "string", "enum": ["dark", "light"] }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Custom name for the theme (auto-generated if omitted)",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated theme",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "variant": { "type": "string", "enum": ["dark", "light"] },
+                    "harmony": { "type": "string", "description": "Color harmony used (e.g. complementary, triadic)" },
+                    "baseHue": { "type": "integer", "description": "Base hue value (0-359)" },
+                    "colors": { "$ref": "#/components/schemas/ThemeVariant" },
+                    "importString": { "type": "string", "description": "Ready-to-paste string for Codex Settings > Appearance" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/color-me-lucky/submit": {
+      "post": {
+        "operationId": "submitRandomTheme",
+        "summary": "Submit a generated theme to the DexThemes gallery",
+        "description": "Submit a Color Me Lucky generated theme (or any theme colors) to the community gallery. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string", "description": "Display name for the theme" },
+                  "variant": { "type": "string", "enum": ["dark", "light"], "description": "Theme variant (default: dark)" },
+                  "summary": { "type": "string", "description": "Short description (defaults to 'Generated with Color Me Lucky')" },
+                  "colors": {
+                    "$ref": "#/components/schemas/ThemeVariant",
+                    "description": "Theme colors. If omitted, fresh random colors are generated."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Theme submitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "theme": { "type": "object", "description": "The created theme record" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/github": {
+      "get": {
+        "operationId": "githubOAuthStart",
+        "summary": "Start GitHub OAuth login flow",
+        "description": "Redirects the user to GitHub for OAuth authorization. This is a browser redirect flow -- not intended for direct API consumption.",
+        "parameters": [
+          {
+            "name": "origin",
+            "in": "query",
+            "description": "Frontend origin to redirect back to after login (default: https://dexthemes.com)",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to GitHub OAuth authorization page"
+          }
+        }
+      }
+    },
+    "/auth/github/callback": {
+      "get": {
+        "operationId": "githubOAuthCallback",
+        "summary": "GitHub OAuth callback",
+        "description": "Handles the OAuth callback from GitHub, exchanges the code for an access token, creates or updates the user, and redirects back to the frontend. Production origins establish the browser session cookie automatically; localhost/dev may still use a temporary hash-token bootstrap. Not intended for direct API consumption.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "description": "OAuth authorization code from GitHub",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Signed state parameter containing the frontend origin",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the frontend after establishing the browser session"
+          },
+          "400": {
+            "description": "Missing or invalid code/state parameter"
+          }
+        }
+      }
+    },
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Use a Bearer dxt_ API key for scripted access. Browser sessions on dexthemes.com authenticate with the DexThemes session cookie."
+      }
+    },
+    "schemas": {
+      "ThemeVariant": {
+        "type": "object",
+        "properties": {
+          "surface": { "type": "string", "description": "Main background color (hex)" },
+          "ink": { "type": "string", "description": "Primary text color (hex)" },
+          "accent": { "type": "string", "description": "Brand/link color (hex)" },
+          "sidebar": { "type": "string", "description": "Sidebar background color (hex)" },
+          "codeBg": { "type": "string", "description": "Code block background color (hex)" },
+          "diffAdded": { "type": "string", "description": "Added code diff color (hex)" },
+          "diffRemoved": { "type": "string", "description": "Removed code diff color (hex)" },
+          "skill": { "type": "string", "description": "Secondary accent color (hex)" },
+          "contrast": { "type": "integer", "description": "Contrast level (0-100)" }
+        }
+      },
+      "Theme": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "summary": { "type": "string" },
+          "dark": { "$ref": "#/components/schemas/ThemeVariant" },
+          "light": { "$ref": "#/components/schemas/ThemeVariant" },
+          "accents": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "copies": { "type": "integer" },
+          "dateAdded": { "type": "string", "format": "date" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string" },
+          "displayName": { "type": "string" },
+          "avatarUrl": { "type": "string" },
+          "provider": { "type": "string", "enum": ["github", "x", "agent"] }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "description": "Error message" }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Missing or invalid authentication token",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Invalid request body or parameters",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      }
+    }
+  }
+}

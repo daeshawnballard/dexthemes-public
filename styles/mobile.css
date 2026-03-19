@@ -1,0 +1,1220 @@
+/* DexThemes — responsive and compact/mobile layouts */
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+
+@media (max-width: 1024px) {
+  .shell {
+    grid-template-columns: 0 1fr 260px;
+  }
+  .sidebar { display: none; }
+}
+
+/* ================================================
+   MOBILE EXPERIENCE (≤ 1024px — phones + tablets)
+   ================================================ */
+
+/* Mobile nav bar — hidden on desktop */
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .shell {
+    --mobile-browse-header-top: 0px;
+    --mobile-browse-search-top: 60px;
+    --mobile-browse-pills-top: 4px;
+    --mobile-browse-subpills-top: 48px;
+  }
+
+  /* Switch to single-column, full-screen layout */
+  .shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    position: relative;
+  }
+
+  /* Content views — hidden by default, fill available space */
+  .sidebar,
+  .main,
+  .panel {
+    border: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Sidebar = "Browse" view — scrollable, fills space */
+  .sidebar {
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 12px;
+  }
+
+  .sidebar-header {
+    position: sticky;
+    top: var(--mobile-browse-header-top);
+    z-index: 34;
+    padding: 10px 16px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background:
+      linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-bg) 82%, rgba(38, 37, 35, 0.92) 100%);
+    backdrop-filter: blur(14px);
+  }
+
+  /* Hide Create button on mobile */
+  .sidebar-header .new-chat-btn {
+    display: none !important;
+  }
+
+  /* Remove brand bottom margin — header is now a flex row */
+  .sidebar-brand {
+    margin-bottom: 0;
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .sidebar-brand-copy {
+    min-width: 0;
+  }
+
+  .sidebar-brand-name {
+    font-size: 16px;
+  }
+
+  .sidebar-brand-sub {
+    font-size: 11px;
+  }
+
+  /* P0: Remove divider on mobile */
+  .sidebar-divider {
+    display: none;
+  }
+
+  /* Profile / auth in header top-right */
+  .mobile-header-profile {
+    flex-shrink: 0;
+  }
+
+  .mobile-avatar-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-avatar-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .mobile-avatar-btn:active .mobile-avatar-img {
+    border-color: var(--accent);
+  }
+
+  .mobile-signin-link {
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 400;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .mobile-signin-link:active {
+    opacity: 1;
+    color: var(--text-secondary);
+  }
+
+  .mobile-profile-wrapper {
+    position: relative;
+  }
+
+  .mobile-user-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 160px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+
+  .mobile-user-menu-name {
+    padding: 6px 10px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  .mobile-user-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .mobile-user-menu-btn:active {
+    background: var(--surface-raised);
+  }
+
+  /* P1: Hide filter/sort on mobile — pills handle categorization */
+  .search-controls {
+    display: none;
+  }
+
+  /* Main = "Preview" view — hidden by default on mobile */
+  .main {
+    display: none;
+  }
+
+  .main.mobile-active {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    animation: mobileSlideIn 0.25s ease-out;
+  }
+
+  .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-back-btn:active {
+    transform: scale(0.9);
+    background: var(--surface-raised);
+  }
+
+  /* Like/Share icons in the main header */
+  .header-social-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  /* On create: show share, hide like */
+  .mobile-create-mode .header-social-actions .like-btn {
+    display: none !important;
+  }
+
+  /* Align "Generate" label with buttons inside builder-panel (which has 16px padding) */
+  .shell:has(.mobile-create-mode) .panel .panel-header {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .preview-area {
+    padding: 0 12px 4px;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .preview-window {
+    border-radius: 12px;
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }
+
+  /* Panel — hidden by default on mobile */
+  .panel {
+    display: none;
+    border-left: none;
+    padding-bottom: 16px;
+  }
+
+  .panel.mobile-active {
+    /* overridden by compact panel rule below */
+  }
+
+  /* When preview is active, constrain layout to viewport */
+  .shell:has(.main.mobile-active),
+  .shell:has(.panel.mobile-active) {
+    overflow-y: auto;
+  }
+
+  /* Hide sidebar when preview/create is active */
+  .shell:has(.main.mobile-active) > .sidebar,
+  .shell:has(.panel.mobile-active) > .sidebar {
+    display: none !important;
+  }
+
+  /* Onboarding overlay — compact on mobile */
+  .onboarding-overlay {
+    display: none;
+  }
+
+  /* Compact panel on mobile */
+  .panel.mobile-active {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 0 16px 8px;
+  }
+
+  /* Panel header: "Variants" left, actions right — same row */
+  .panel.mobile-active .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 8px;
+  }
+
+  .panel-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .panel-icon-btn:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-accent-dots {
+    display: flex;
+    gap: 5px;
+    margin: 0;
+  }
+
+  .mobile-accent-dots .accent-dot {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Hide desktop accent dots and detail row on mobile */
+  .panel-actions .detail-row {
+    display: none;
+  }
+
+  .panel-actions .accent-dots {
+    display: none;
+  }
+
+  /* Hide full-width share button on mobile */
+  .share-x-btn {
+    display: none !important;
+  }
+
+  /* Variant cards: side by side, compact pills, no mini preview */
+  .variant-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .variant-card {
+    flex: 1;
+    margin: 0;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .variant-card:active {
+    transform: scale(0.97);
+  }
+
+  .variant-card .mini-preview {
+    display: none;
+  }
+
+  .variant-card-label {
+    border-bottom: none;
+    justify-content: center;
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  /* Panel actions: compact, no border */
+  .panel-actions {
+    padding: 0;
+    border-top: none;
+  }
+
+  /* Hint text — single line, smaller */
+  .import-hint {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* Swap bolt icon for copy icon on mobile */
+  .apply-icon-bolt {
+    display: none;
+  }
+  .apply-icon-copy {
+    display: inline;
+  }
+
+  /* Mobile bottom nav bar — fixed to bottom */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(56px + env(safe-area-inset-bottom));
+    background: var(--sidebar-bg);
+    border-top: 1px solid var(--border);
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 20;
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 8px 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-family: var(--font);
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-nav-btn:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-nav-btn.active {
+    color: var(--accent);
+  }
+
+  .mobile-nav-btn svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.15s;
+  }
+
+  /* Hide sidebar footer disclaimer on mobile — save space */
+  .sidebar-footer-disclaimer {
+    font-size: 9px;
+  }
+
+  /* Onboarding adjustments */
+  .onboarding-overlay {
+    padding: 24px 16px;
+  }
+
+  .onboarding-steps {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .onboarding-step {
+    flex-direction: row;
+    gap: 12px;
+    text-align: left;
+  }
+
+  /* Create mode — JS handles showing share but hiding like */
+
+  /* Builder panel on mobile — hide "Theme Builder" title (Create header covers it) */
+  .builder-panel {
+    padding: 0 16px;
+  }
+
+  /* On create mode, don't let builder-panel flex-grow — keeps buttons compact */
+  .shell:has(.mobile-create-mode) .builder-panel {
+    flex: none;
+  }
+
+  /* Compact create uses the main header title only */
+  .shell[data-mobile-view="create"] .panel .panel-header {
+    display: none;
+  }
+
+  /* Hide hex color pickers on mobile — just use Color Me Lucky */
+  .builder-section {
+    display: none;
+  }
+
+  .builder-mobile-lucky-row {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 12px;
+  }
+
+  /* Color Me Dark / Color Me Light — compact tray controls */
+  .builder-lucky-btn {
+    flex: 1;
+    min-height: 42px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 12px;
+  }
+
+  .builder-lucky-light {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+
+  .builder-fun-row {
+    display: none;
+  }
+
+  /* Hide variant toggle and controls row on mobile (merged into lucky buttons) */
+  .builder-controls-row {
+    display: none;
+  }
+  .builder-variant-toggle {
+    display: none;
+  }
+
+  /* Builder name input — compact */
+  .builder-name-input {
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .builder-actions {
+    padding: 0 16px 0;
+    border-top: none;
+    gap: 0;
+  }
+
+  /* Hide Share on social in builder on mobile */
+  .builder-actions .share-x-btn {
+    display: none;
+  }
+
+  /* Submit prompt chat bubble inside preview */
+  .create-submit-prompt {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .create-submit-bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    animation: fadeSlideUp 0.3s ease;
+  }
+
+  .create-submit-bubble:active {
+    transform: scale(0.97);
+  }
+
+  .create-submit-bubble strong {
+    color: var(--text-primary);
+  }
+
+  .create-submit-emoji {
+    font-size: 14px;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Mobile submit modal */
+  .mobile-submit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.15s ease;
+  }
+
+  .mobile-submit-modal {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobile-submit-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .mobile-submit-name {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 15px;
+    outline: none;
+  }
+
+  .mobile-submit-name:focus {
+    border-color: var(--accent);
+  }
+
+  .mobile-submit-name.name-required {
+    border-color: #ff4d6a;
+    animation: shake 0.3s ease;
+  }
+
+  .mobile-submit-btn {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .mobile-submit-github {
+    background: #333;
+  }
+
+  .mobile-submit-dismiss {
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  @keyframes mobileSlideIn {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Preview closed overlay */
+  .preview-closed-overlay {
+    padding: 24px 16px;
+  }
+
+  /* Search bar mobile — tight spacing to pills */
+  .search-bar-wrapper {
+    position: sticky;
+    top: var(--mobile-browse-search-top);
+    z-index: 33;
+    padding: 8px 16px 10px;
+    margin: 0;
+    background:
+      linear-gradient(180deg, rgba(38, 37, 35, 0.98) 0%, rgba(38, 37, 35, 0.94) 100%);
+    backdrop-filter: blur(14px);
+  }
+
+  .search-bar-wrapper .field-label {
+    display: none;
+  }
+
+  .category-list {
+    padding: 0;
+  }
+
+  /* Toast on mobile */
+  .toast {
+    left: 16px;
+    right: 16px;
+    bottom: 72px;
+    transform: none;
+    max-width: none;
+  }
+
+  .toast.visible {
+    transform: none;
+  }
+
+  /* Submit modal on mobile */
+  .submit-modal {
+    width: calc(100% - 32px);
+    max-height: 80vh;
+  }
+
+  /* ================================================
+     Mobile Browse — Category Pills + Card Grid
+     ================================================ */
+
+  .mobile-browse {
+    padding: 0 16px 16px;
+  }
+
+  .mobile-cat-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: var(--mobile-browse-pills-top);
+    z-index: 32;
+    background:
+      linear-gradient(180deg, rgba(38, 37, 35, 0.98) 0%, rgba(38, 37, 35, 0.94) 100%);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .mobile-cat-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-cat-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-cat-pill:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-cat-pill:hover {
+    background: var(--surface-raised);
+  }
+
+  .mobile-cat-pill.active {
+    background: var(--accent-dim);
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+
+  .mobile-cat-count {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  .mobile-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+
+  /* 3-column grid on tablet */
+  @media (min-width: 600px) {
+    .mobile-card-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .theme-card {
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: transform 0.15s ease, border-color 0.2s, box-shadow 0.2s;
+    background: var(--surface);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .theme-card:active {
+    transform: scale(0.96);
+  }
+
+  .theme-card.active {
+    border-color: var(--accent-border);
+    box-shadow: 0 0 0 1px var(--accent-border);
+  }
+
+  .theme-card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .theme-card-preview {
+    height: 80px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-card-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .theme-card-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .theme-card-line {
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .theme-card-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .theme-card-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .theme-card-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-browse-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* P1: Subgroup pills for DexThemes */
+  .mobile-sub-pills {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: var(--mobile-browse-subpills-top);
+    z-index: 31;
+    background:
+      linear-gradient(180deg, rgba(38, 37, 35, 0.96) 0%, rgba(38, 37, 35, 0.92) 100%);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .mobile-sub-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-sub-pill {
+    padding: 5px 12px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mobile-sub-pill:hover {
+    color: var(--text-secondary);
+    border-color: var(--border-strong);
+  }
+
+  .mobile-sub-pill.active {
+    background: var(--surface-raised);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+  }
+
+  /* P2: Variant indicator icon on cards */
+  .theme-card-variant {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0.4;
+    color: inherit;
+  }
+
+  .theme-card-preview .theme-card-variant {
+    color: inherit;
+    stroke: currentColor;
+  }
+
+  /* Scroll-based header collapse */
+  .sidebar-header {
+    transition: padding 0.2s ease;
+  }
+
+  .sidebar-header.collapsed .sidebar-brand-copy {
+    display: block;
+  }
+
+  .sidebar-header.collapsed {
+    padding: 10px 16px 8px;
+  }
+
+  /* Hide desktop sidebar elements on mobile browse */
+  .sidebar-footer {
+    display: none;
+  }
+}
+
+/* ================================================
+   TABLET ADJUSTMENTS (≤ 768px)
+   Tighter spacing, smaller fonts, narrower panels
+   for small tablets and large phones.
+   ================================================ */
+
+  @media (max-width: 768px) {
+  .shell {
+    --mobile-browse-search-top: 56px;
+    --mobile-browse-pills-top: 6px;
+    --mobile-browse-subpills-top: 46px;
+  }
+
+  /* Tighter preview area padding */
+  .preview-area {
+    padding: 0 8px 4px;
+  }
+
+  /* Smaller preview window border radius */
+  .preview-window {
+    border-radius: 10px;
+  }
+
+  /* Compact main header */
+  .main-header {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .main-title {
+    font-size: 14px;
+  }
+
+  /* Narrower variant cards on small screens */
+  .variant-cards {
+    gap: 6px;
+  }
+
+  .variant-card-label {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  /* Compact panel actions */
+  .panel.mobile-active {
+    padding: 0 12px 6px;
+  }
+
+  .panel.mobile-active .panel-header {
+    padding: 8px 0 6px;
+  }
+
+  .panel-title {
+    font-size: 14px;
+  }
+
+  /* Smaller mobile card grid gap */
+  .mobile-card-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .theme-card-preview {
+    height: 68px;
+    padding: 10px;
+  }
+
+  .theme-card-info {
+    padding: 6px 10px;
+  }
+
+  .theme-card-name {
+    font-size: 11px;
+  }
+
+  /* Compact category pills */
+  .mobile-cat-pill {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .mobile-sub-pill {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+
+  /* Compact search bar */
+  .search-bar-wrapper {
+    padding: 6px 12px 8px;
+  }
+
+  /* Sidebar header narrower padding on tablet */
+  .sidebar-header {
+    padding: 8px 12px 6px;
+  }
+
+  .sidebar-brand-name {
+    font-size: 14px;
+  }
+
+  /* Builder panel tighter on small screens */
+  .builder-panel {
+    padding: 0 12px;
+  }
+
+  .builder-name-input {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .builder-actions {
+    padding: 0 12px 0;
+  }
+
+  /* Leaderboard view compact */
+  .leaderboard-view {
+    max-width: 100%;
+  }
+
+  .leaderboard-header {
+    padding: 12px 16px 10px;
+  }
+
+  .leaderboard-title {
+    font-size: 14px;
+  }
+
+  /* Supporter modal compact */
+  .supporter-modal {
+    padding: 28px 24px 22px;
+  }
+
+  .supporter-modal-title {
+    font-size: 18px;
+  }
+
+  .supporter-modal-text {
+    font-size: 12px;
+  }
+
+  /* Toast narrower margins */
+  .toast {
+    left: 12px;
+    right: 12px;
+    bottom: 68px;
+    font-size: 12px;
+  }
+
+  /* Mobile nav slightly more compact */
+  .mobile-nav-btn {
+    font-size: 9px;
+    gap: 1px;
+  }
+
+  .mobile-nav-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Profile view compact */
+  .profile-container {
+    padding: 16px;
+  }
+
+  .profile-stats-grid {
+    gap: 8px;
+  }
+
+  .profile-stat {
+    padding: 10px;
+  }
+
+  .profile-stat-value {
+    font-size: 20px;
+  }
+
+  /* Achievements grid smaller */
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+
+  .achievement-badge {
+    padding: 10px 6px;
+  }
+
+  .achievement-badge-icon {
+    font-size: 20px;
+  }
+
+  /* Submit modal compact */
+  .mobile-submit-modal {
+    padding: 20px;
+    max-width: 300px;
+  }
+
+  .mobile-submit-title {
+    font-size: 15px;
+  }
+
+  /* Onboarding compact */
+  .onboarding-overlay {
+    padding: 20px 12px;
+    gap: 16px;
+  }
+
+  .onboarding-title {
+    font-size: 20px;
+  }
+
+  .onboarding-subtitle {
+    font-size: 13px;
+  }
+
+  .onboarding-step {
+    max-width: 120px;
+  }
+
+  .onboarding-step-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+}

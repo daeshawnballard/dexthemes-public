@@ -1,0 +1,191 @@
+# DexThemes
+
+> Discover & create Codex themes — browse, preview, and apply 100+ community-built themes.
+
+DexThemes is a free, open source theme platform for [Codex](https://openai.com/codex) by OpenAI. Users can discover themes, preview them in a live chat mockup, create their own, and hand them off to Codex with guided import steps.
+
+## Domains
+
+- **Website**: https://dexthemes.com (frontend, deep links, docs)
+- **Public theme catalog**: https://dexthemes.com/api/themes
+- **Published agent docs**: https://dexthemes.com/llms.txt and https://dexthemes.com/.well-known/openapi.json
+- **Direct API base**: https://acrobatic-corgi-867.convex.site (authenticated + generator endpoints)
+
+Use `https://dexthemes.com/api/themes` for public browsing examples. Use the published LLM/OpenAPI docs for discovery. Use the direct Convex base URL when you need authenticated or generator HTTP access.
+
+## Authentication
+
+DexThemes has two public auth modes:
+
+1. **Browser session cookie** — used automatically on `dexthemes.com` after GitHub OAuth sign-in.
+2. **API keys** — prefixed with `dxt_`. Agents and CLI tools can self-register without OAuth and send them in `Authorization: Bearer <token>`.
+
+### Self-register an agent (no OAuth needed)
+
+```
+POST /auth/agent
+Content-Type: application/json
+
+{ "name": "My Agent Name" }
+```
+
+Response (201):
+```json
+{
+  "apiKey": "dxt_...",
+  "agentId": "agent-...",
+  "message": "API key created. Use it in the Authorization header: Bearer dxt_..."
+}
+```
+
+Save your API key — it is shown only once.
+
+### Use the token
+
+```
+Authorization: Bearer dxt_your_api_key_here
+```
+
+---
+
+## API Quick Reference
+
+### Public endpoints (no auth required)
+
+#### GET /themes
+List all themes across the Codex, DexThemes, and Community categories.
+Returns JSON array.
+
+#### GET /themes/community
+List all published community themes with colors, accents, and metadata.
+Returns JSON array.
+
+#### GET /themes/codex
+List all built-in Codex themes.
+
+#### GET /themes/dexthemes
+List all DexThemes-curated themes.
+
+#### GET /themes/dexthemes/:subgroup
+List DexThemes-curated themes for a subgroup such as `anime`, `video-games`, or `unlockables`.
+
+#### GET /themes/likes/counts
+Get like counts for all themes.
+Returns JSON object mapping theme IDs to counts.
+
+#### GET /api/color-me-lucky
+Generate a random harmonious theme.
+Parameters:
+- `variant` (optional): "dark" (default) or "light"
+- `name` (optional): custom name for the theme
+
+Returns: name, variant, harmony type, colors object, and a ready-to-paste `importString` for Codex.
+
+#### Deep link to a theme
+```
+https://dexthemes.com/?theme={id}&variant=dark|light
+```
+
+---
+
+### Authenticated endpoints
+
+Browser use on `dexthemes.com` relies on the session cookie. Scripted use relies on a Bearer `dxt_...` API key.
+
+#### GET /auth/me
+Get the current authenticated user profile.
+Returns: `{ user: { ... } }`
+
+#### POST /auth/logout
+End the current browser session. API keys are not affected.
+Returns: `{ success: true }`
+
+#### GET /me/stats
+Get the authenticated user's submission statistics (theme count, total copies, total likes).
+Returns: JSON stats object.
+
+#### GET /me/likes
+Get the list of theme IDs the authenticated user has liked.
+Returns: `{ likes: ["theme-id-1", "theme-id-2", ...] }`
+
+#### POST /themes
+Submit a new community theme.
+Body:
+```json
+{
+  "themeId": "my-theme-slug",
+  "name": "My Theme",
+  "summary": "A cool dark theme",
+  "dark": { "surface": "#...", "ink": "#...", "accent": "#...", ... },
+  "light": { "surface": "#...", "ink": "#...", "accent": "#...", ... },
+  "accents": ["#accent1", "#accent2"],
+  "codeThemeId": { "dark": "codex", "light": "codex" }
+}
+```
+At least one of `dark` or `light` is required. Returns 201 on success.
+
+#### POST /themes/like
+Toggle a like on a theme (like if not liked, unlike if already liked).
+Body: `{ "themeId": "theme-id" }`
+Returns: `{ liked: true|false, count: <number> }`
+
+#### POST /themes/flag
+Flag a theme for moderation.
+Body: `{ "themeId": "theme-id", "reason": "optional reason (max 500 chars)" }`
+Returns 409 if already flagged by this user.
+
+#### POST /themes/copy
+Increment the copy counter for a theme. Requires auth to prevent abuse.
+Body: `{ "themeId": "theme-id" }`
+Returns: updated theme object or 404.
+
+#### POST /api/color-me-lucky/submit
+Submit a randomly generated theme to the DexThemes gallery.
+Body:
+```json
+{
+  "name": "Theme Name",
+  "variant": "dark",
+  "colors": { "surface": "#...", "ink": "#...", ... },
+  "summary": "optional description"
+}
+```
+If `colors` is omitted, fresh random colors are generated. Returns 201 on success.
+
+---
+
+### OAuth endpoints (browser redirect flow only)
+
+These initiate OAuth sign-in and redirect back to the frontend. On production origins they establish the secure browser session cookie automatically. Localhost/dev flows may still use a temporary hash-token bootstrap.
+
+#### GET /auth/github
+Start GitHub OAuth flow. Optional query param: `origin` (frontend URL to redirect back to).
+
+#### GET /auth/github/callback
+GitHub OAuth callback. Exchanges code for token, creates/updates user, redirects to frontend.
+
+---
+
+## Theme format
+
+Each theme has dark and/or light variants with these color properties:
+- `surface` — main background
+- `ink` — primary text color
+- `accent` — brand/link color
+- `sidebar` — sidebar background (auto-derived if omitted)
+- `codeBg` — code block background (auto-derived if omitted)
+- `diffAdded` — green for added code
+- `diffRemoved` — red for removed code
+- `skill` — secondary accent color
+- `contrast` — contrast level (0-100)
+
+### Applying a theme to Codex
+
+Copy the `importString` from any API response, open Codex, go to Settings, then Appearance, and paste it.
+
+## Links
+
+- Website: https://dexthemes.com
+- OpenAPI: https://dexthemes.com/.well-known/openapi.json
+- GitHub: https://github.com/daeshawnballard/dexthemes
+- Full theme data for LLMs: https://dexthemes.com/llms-full.txt

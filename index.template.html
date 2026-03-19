@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DexThemes — Discover & create Codex themes</title>
+<meta name="description" content="Discover and create beautiful themes for Codex. Community-built theme gallery with 100+ themes.">
+
+<!-- Open Graph (defaults — overridden by middleware for ?theme= deep links) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="DexThemes — Discover & create Codex themes">
+<meta property="og:description" content="Discover and create beautiful themes for Codex. Community-built theme gallery with 100+ themes.">
+<meta property="og:image" content="https://dexthemes.com/logo-github-transparent.png">
+<meta property="og:url" content="https://dexthemes.com">
+<meta property="og:site_name" content="DexThemes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DexThemes — Discover & create Codex themes">
+<meta name="twitter:description" content="Discover and create beautiful themes for Codex.">
+<meta name="twitter:image" content="https://dexthemes.com/logo-github-transparent.png">
+
+<link rel="canonical" href="https://dexthemes.com/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DexThemes">
+<meta name="theme-color" content="#0d0d0d">
+<link rel="stylesheet" href="__STYLESHEET_HREF__">
+
+<!-- Prevent theme flash: apply saved theme CSS vars before first paint -->
+<script>
+(function(){
+  try {
+    var tid = localStorage.getItem('dexthemes-selected');
+    var v = localStorage.getItem('dexthemes-variant') || 'dark';
+    var cache = localStorage.getItem('dexthemes-theme-cache');
+    if (tid && cache) {
+      var t = JSON.parse(cache);
+      if (t && t[v]) {
+        var d = t[v], r = document.documentElement.style;
+        var dark = v === 'dark';
+        r.setProperty('--bg', d.surface);
+        r.setProperty('--sidebar-bg', d.sidebar);
+        r.setProperty('--text-primary', d.ink);
+        r.setProperty('--accent', d.accent || t.accents && t.accents[0] || '#0169cc');
+        r.setProperty('--border', dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)');
+        r.setProperty('--border-strong', dark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.14)');
+        r.setProperty('--text-muted', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)');
+      }
+    }
+  } catch(e){}
+})();
+</script>
+
+<!-- Preconnect to third-party origins -->
+<link rel="preconnect" href="https://acrobatic-corgi-867.convex.site" crossorigin>
+<link rel="preconnect" href="https://acrobatic-corgi-867.convex.cloud" crossorigin>
+<link rel="dns-prefetch" href="https://acrobatic-corgi-867.convex.site">
+<link rel="dns-prefetch" href="https://acrobatic-corgi-867.convex.cloud">
+
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "DexThemes",
+  "url": "https://dexthemes.com",
+  "description": "Browse, preview, and apply beautiful themes for Codex. Community-built theme gallery with 100+ themes.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Daeshawn Ballard",
+    "url": "https://x.com/daeshawn"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "ratingCount": "111",
+    "bestRating": "5"
+  }
+}
+</script>
+</head>
+<body>
+<div class="shell" id="app">
+
+  <!-- Left Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 64 64" fill="none" width="34" height="34" aria-label="DexThemes" role="img">
+            <defs>
+              <mask id="d-ring">
+                <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z" fill="white"/>
+                <path d="M29 22h2.5c4.8 0 8.5 3.9 8.5 9s-3.7 9-8.5 9H29V22Z" fill="black"/>
+              </mask>
+              <clipPath id="d-clip">
+                <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z"/>
+              </clipPath>
+            </defs>
+            <g mask="url(#d-ring)">
+              <path d="M18 13h13.5c9.7 0 17.5 8.1 17.5 18s-7.8 18-17.5 18H18V13Z" fill="currentColor"/>
+              <g clip-path="url(#d-clip)">
+                <rect x="19.5" y="18.75" width="15.75" height="6.25" rx="3.125" fill="#47adff"/>
+                <rect x="21.75" y="28.75" width="18.75" height="6.25" rx="3.125" fill="#8b5cf6"/>
+                <rect x="19.75" y="38.75" width="16.75" height="6.25" rx="3.125" fill="#f15bb5"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="sidebar-brand-copy">
+          <div class="sidebar-brand-name">DexThemes</div>
+          <div class="sidebar-brand-sub">Discover & create Codex themes</div>
+        </div>
+      </div>
+      <button class="new-chat-btn" id="submit-btn" data-action="toggle-builder">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span id="submit-btn-text">Create a theme</span>
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Search + Filter + Sort -->
+    <div class="search-bar-wrapper" id="search-bar-wrapper">
+      <label class="field-label" for="sidebar-search">Search themes</label>
+      <div class="search-bar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search themes..." id="sidebar-search" aria-label="Search themes" data-input-action="sidebar-search">
+        <div class="search-controls">
+          <button class="search-filter-btn" id="filter-btn" data-action="toggle-filter-dropdown" title="Filter variants" aria-label="Filter variants">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          </button>
+          <button class="search-sort-btn" id="sort-btn" data-action="toggle-sort-dropdown" title="Sort themes" aria-label="Sort themes">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="9" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="search-dropdown" id="filter-dropdown"></div>
+      <div class="search-dropdown" id="sort-dropdown"></div>
+    </div>
+
+    <!-- Category / Thread list -->
+    <div class="category-list" id="category-list"></div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-auth-row" id="auth-area"></div>
+      <div class="sidebar-meta">Made with love by <a href="https://x.com/daeshawn" target="_blank" class="footer-credit-link">@Daeshawn</a></div>
+      <div class="sidebar-footer-disclaimer">Community-built. Not affiliated with OpenAI.</div>
+    </div>
+  </div>
+
+  <!-- Main Preview -->
+  <div class="main">
+    <div class="main-header">
+      <div class="main-title" id="preview-theme-name">Codex</div>
+      <div class="header-social-actions" id="header-social-actions">
+        <button class="header-icon-btn like-btn" id="like-btn" data-action="like-theme" aria-label="Like theme" title="Like theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="header-icon-btn share-icon-btn" data-action="share-theme" aria-label="Share theme on X" title="Share theme on X">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </button>
+      </div>
+      <div class="main-header-actions">
+      </div>
+    </div>
+    <div class="preview-area">
+      <div class="onboarding-overlay" id="onboarding-overlay" style="display:none;"></div>
+      <div class="preview-window" id="preview-window">
+        <div class="preview-titlebar" id="preview-titlebar">
+          <div class="preview-dots">
+            <div class="preview-dot"></div>
+            <div class="preview-dot"></div>
+            <div class="preview-dot"></div>
+          </div>
+          <span class="preview-window-title">Codex</span>
+        </div>
+      <div class="preview-chat" id="preview-chat" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Preview assistant messages"></div>
+      <div class="preview-input-bar" id="preview-input-bar">
+        <label class="field-label field-label--preview" for="preview-input-text">Prompt</label>
+        <div class="preview-input-inner" id="preview-input-inner">
+          <input type="text" class="preview-input-text" id="preview-input-text" placeholder="Ask anything..." aria-label="Preview prompt" autocomplete="off" spellcheck="false">
+            <div class="preview-send-btn" id="preview-send-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-view" id="profile-view" style="display:none;"></div>
+      <div class="leaderboard-view" id="leaderboard-view" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Right Panel — Light/Dark Previews + Copy -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Variants</div>
+    </div>
+
+    <div class="variant-cards">
+      <div class="variant-card selected" id="card-dark" role="button" tabindex="0" aria-pressed="true" data-action="select-variant" data-action-keyboard="true" data-variant="dark">
+        <div class="variant-card-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          Dark
+          <span class="selection-indicator">Selected</span>
+        </div>
+        <div class="mini-preview" id="mini-dark"></div>
+      </div>
+
+      <div class="variant-card" id="card-light" role="button" tabindex="0" aria-pressed="false" data-action="select-variant" data-action-keyboard="true" data-variant="light">
+        <div class="variant-card-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Light
+          <span class="selection-indicator">Selected</span>
+        </div>
+        <div class="mini-preview" id="mini-light"></div>
+      </div>
+    </div>
+
+    <div class="panel-actions">
+      <div class="detail-row">
+        <span class="detail-label">Accent color</span>
+      </div>
+      <div class="accent-dots" id="accent-dots"></div>
+      <div class="detail-row">
+        <span class="detail-label">Import string</span>
+        <span class="detail-hint" id="variant-hint">dark variant</span>
+      </div>
+      <button class="copy-btn" id="copy-btn" data-action="apply-codex">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy import string
+      </button>
+      <div class="import-hint">Copy the import string, then open Codex → Settings → Appearance → Import.</div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav">
+    <button class="mobile-nav-btn active" data-view="browse" data-action="set-mobile-view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Browse</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="preview" data-action="set-mobile-view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>Preview</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="create" data-action="set-mobile-view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Create</span>
+    </button>
+  </nav>
+</div>
+<script src="__THEME_BUNDLE_HREF__" defer></script>
+<script src="__BOOT_SCRIPT_HREF__" defer></script>
+<script>
+(function () {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const host = window.location.hostname;
+  const constrained = connection?.saveData || /^(slow-2g|2g|3g)$/.test(connection?.effectiveType || "");
+  if (host === "localhost" || host === "127.0.0.1") return;
+  if (constrained) return;
+  if (window.innerWidth <= 1024) return;
+
+  let telemetryScheduled = false;
+  const loadTelemetry = () => {
+    if (telemetryScheduled) return;
+    telemetryScheduled = true;
+    ["/_vercel/insights/script.js", "/_vercel/speed-insights/script.js"].forEach((src) => {
+      if (document.querySelector('script[data-telemetry="' + src + '"]')) return;
+      const script = document.createElement("script");
+      script.src = src;
+      script.defer = true;
+      script.dataset.telemetry = src;
+      document.body.appendChild(script);
+    });
+  };
+
+  const scheduleTelemetry = () => {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(loadTelemetry, { timeout: 8000 });
+      return;
+    }
+    setTimeout(loadTelemetry, 4000);
+  };
+
+  const onFirstIntent = () => {
+    window.removeEventListener("pointerdown", onFirstIntent);
+    window.removeEventListener("keydown", onFirstIntent);
+    scheduleTelemetry();
+  };
+
+  window.addEventListener("pointerdown", onFirstIntent, { once: true, passive: true });
+  window.addEventListener("keydown", onFirstIntent, { once: true });
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      if (!telemetryScheduled && document.visibilityState === "visible") {
+        scheduleTelemetry();
+      }
+    }, 12000);
+  }, { once: true });
+})();
+</script>
+</body>
+</html>
