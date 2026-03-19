@@ -2,6 +2,7 @@
 // DexThemes — Statsig Analytics
 // ================================================
 
+import { StatsigClient } from '@statsig/js-client';
 import * as state from './state.js';
 
 let statsigClient = null;
@@ -28,8 +29,6 @@ function getStatsigUser() {
 }
 
 export async function initStatsig() {
-  if (!window.Statsig || !window.Statsig.StatsigClient) return;
-
   let clientKey = '';
   try {
     const res = await fetch('/api/config');
@@ -43,7 +42,7 @@ export async function initStatsig() {
   if (!clientKey) return;
 
   try {
-    statsigClient = new window.Statsig.StatsigClient(clientKey, getStatsigUser());
+    statsigClient = new StatsigClient(clientKey, getStatsigUser());
     statsigInitPromise = statsigClient.initializeAsync()
       .then(() => {
         statsigReady = true;

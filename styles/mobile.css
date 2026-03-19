@@ -1111,6 +1111,7 @@
   /* Leaderboard view compact */
   .leaderboard-view {
     max-width: 100%;
+    border-radius: 12px;
   }
 
   .leaderboard-header {
@@ -1160,6 +1161,10 @@
 
   .profile-stats-grid {
     gap: 8px;
+  }
+
+  .profile-stats-grid--activity {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .profile-stat {

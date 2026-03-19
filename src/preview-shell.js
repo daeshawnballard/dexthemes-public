@@ -6,7 +6,7 @@ import * as state from './state.js';
 import { fallbackCopy } from './utils.js';
 import { getVariants, hasVariant, applyShellTheme, applyPreview, renderMiniPreview, buildImportString } from './theme-engine.js';
 import { renderSidebar } from './sidebar.js';
-import { getApplyButtonCopy, showApplyHandoffMessage } from './codex-handoff.js';
+import { getApplyButtonCopy, openCodexSettings, showApplyHandoffMessage } from './codex-handoff.js';
 import { syncAttributionOverlay } from './preview-attribution.js';
 import { loadBuilderModule } from './lazy-modules.js';
 import { grantUnlockAction, recordSecretInteraction } from './unlock-api.js';
@@ -89,7 +89,7 @@ export function selectVariant(variant) {
   applyPreview(state.selectedTheme, state.selectedVariant);
   syncAttributionOverlay();
   updateVariantCards();
-  track('variant_switched', {
+  track('variant_selected', {
     theme_id: state.selectedTheme.id,
     variant,
   });
@@ -126,6 +126,12 @@ async function requestVariantForTheme(themeId, card, missingLabel, currentReques
     card.onclick = null;
 
     const othersText = newCount > 1 ? ` ${newCount - 1} ${newCount - 1 === 1 ? 'other person wants' : 'others want'} this too.` : '';
+    track('missing_variant_requested', {
+      theme_id: themeId,
+      theme_name: state.selectedTheme?.name,
+      variant: missingLabel.toLowerCase(),
+      request_count: newCount,
+    });
     await showSystemMessage(`${missingLabel} variant requested.${othersText} We'll let the creator know!`, 'variant-request-msg');
   } catch (error) {
     console.warn('Failed to request variant:', error);
@@ -318,13 +324,14 @@ export function applyToCodex() {
       theme_id: state.selectedTheme.id,
       theme_name: state.selectedTheme.name,
       variant: state.selectedVariant,
+      source: 'preview',
       mobile: compact,
     });
     if (textEl) textEl.textContent = applyCopy.successLabel;
     btn?.classList.add('copied');
     if (hint) hint.textContent = compact ? 'Paste it into Codex later.' : applyCopy.hintText;
     if (!compact) {
-      setTimeout(() => window.open('codex://settings', '_blank'), 300);
+      setTimeout(openCodexSettings, 300);
     }
     showApplyHandoffMessage({ themeName: state.selectedTheme.name, variant: state.selectedVariant });
     setTimeout(() => {

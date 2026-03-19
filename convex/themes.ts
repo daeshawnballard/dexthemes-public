@@ -300,6 +300,29 @@ export const getMySubmissionStats = internalQuery({
       .sort((a, b) => b.createdAt - a.createdAt);
 
     const totalCopies = publishedThemes.reduce((sum, theme) => sum + theme.copies, 0);
+    const likeCounts = await Promise.all(
+      publishedThemes.map(async (theme) => {
+        const likes = await ctx.db
+          .query("likes")
+          .withIndex("by_theme", (q) => q.eq("themeId", theme.themeId))
+          .collect();
+        return [theme.themeId, likes.length] as const;
+      }),
+    );
+    const likeCountByThemeId = Object.fromEntries(likeCounts);
+    const totalLikes = publishedThemes.reduce(
+      (sum, theme) => sum + (likeCountByThemeId[theme.themeId] || 0),
+      0,
+    );
+    const likesGiven = await ctx.db
+      .query("likes")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+    const copyEvents = await ctx.db
+      .query("themeCopyEvents")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+    const copiedThemes = new Set(copyEvents.map((event) => event.themeId));
     const topTheme = publishedThemes.reduce<typeof publishedThemes[number] | null>(
       (best, theme) => {
         if (!best || theme.copies > best.copies) return theme;
@@ -319,13 +342,25 @@ export const getMySubmissionStats = internalQuery({
       totals: {
         submittedThemes: publishedThemes.length,
         totalCopies,
+        totalLikes,
         averageCopies: publishedThemes.length > 0 ? Math.round(totalCopies / publishedThemes.length) : 0,
+      },
+      creatorTotals: {
+        submittedThemes: publishedThemes.length,
+        totalCopies,
+        totalLikes,
+        averageCopies: publishedThemes.length > 0 ? Math.round(totalCopies / publishedThemes.length) : 0,
+      },
+      activityTotals: {
+        copiedThemes: copiedThemes.size,
+        likedThemes: likesGiven.length,
       },
       topTheme: topTheme
         ? {
             themeId: topTheme.themeId,
             name: topTheme.name,
             copies: topTheme.copies,
+            likes: likeCountByThemeId[topTheme.themeId] || 0,
           }
         : null,
       themes: publishedThemes.map((theme) => ({
@@ -334,6 +369,7 @@ export const getMySubmissionStats = internalQuery({
         name: theme.name,
         summary: theme.summary,
         copies: theme.copies,
+        likes: likeCountByThemeId[theme.themeId] || 0,
         createdAt: theme.createdAt,
         accents: theme.accents,
         dark: theme.dark,

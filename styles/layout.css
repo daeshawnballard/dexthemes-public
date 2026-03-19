@@ -105,6 +105,12 @@
   padding: 24px clamp(20px, 2.4vw, 40px);
 }
 
+.preview-area.preview-area--detail {
+  align-items: stretch;
+  justify-content: stretch;
+  padding-block: 16px;
+}
+
 
 /* ================================================
    RIGHT PANEL
@@ -435,4 +441,3 @@
 }
 
 /* svg sizing handled by shared .apply-codex-btn, .share-x-btn rule above */
-

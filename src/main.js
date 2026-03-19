@@ -20,6 +20,7 @@ import {
 import { initDelegatedActions } from './delegated-actions.js';
 import { grantUnlockAction } from './unlock-api.js';
 import { initStatsig } from './analytics-client.js';
+import { trackEvent } from './analytics-client.js';
 import { clearDeferredInstallPrompt, setDeferredInstallPrompt } from './install-prompt.js';
 
 function isCompactViewport() {
@@ -94,11 +95,13 @@ function syncInstalledState() {
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault();
   setDeferredInstallPrompt(event);
+  void trackEvent('pwa_install_prompt_shown', null, { source: 'browser_prompt' });
 });
 
 window.addEventListener('appinstalled', () => {
   clearDeferredInstallPrompt();
   localStorage.setItem('dexthemes-pwa-installed', '1');
+  void trackEvent('pwa_installed', null, { source: 'appinstalled' });
   grantUnlockAction('install_pwa');
 });
 

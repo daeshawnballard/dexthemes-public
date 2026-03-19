@@ -187,6 +187,7 @@ export function onSupporterDonate() {
 }
 
 export async function runSupporterUnlockFlow(actionKey = 'buy_coffee') {
+  track('supporter_prompt_opened', { action: actionKey });
   if (!state.currentUser) {
     showInlineSignInPrompt('supporter', 'Connect an account first to generate your supporter claim code.');
     return;
@@ -196,11 +197,13 @@ export async function runSupporterUnlockFlow(actionKey = 'buy_coffee') {
     const claim = await createSupporterClaim();
     if (claim.alreadySupporter) {
       localStorage.removeItem('dexthemes-pending-unlock-action');
+      track('supporter_claim_started', { action: actionKey, already_supporter: true });
       showSupporterClaimModal({ alreadySupporter: true });
       return;
     }
 
     localStorage.setItem('dexthemes-pending-unlock-action', actionKey);
+    track('supporter_claim_started', { action: actionKey, already_supporter: false });
     const copied = claim.token ? await copySupporterClaimToken(claim.token) : false;
     showSupporterClaimModal({
       token: claim.token,
@@ -447,6 +450,7 @@ export async function runInstallUnlockFlow(actionKey) {
     deferredPrompt.prompt();
     const choice = await deferredPrompt.userChoice;
     if (choice?.outcome === 'accepted') {
+      track('pwa_install_prompt_accepted', { source: 'browser_prompt' });
       clearDeferredInstallPrompt();
       if (state.currentUser) {
         await grantUnlockAction(actionKey);

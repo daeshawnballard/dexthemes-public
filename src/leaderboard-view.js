@@ -2,6 +2,7 @@ import * as state from './state.js';
 import { escapeHtml } from './utils.js';
 import { fetchLeaderboard } from './api.js';
 import { supporterMarkHtml, buildSupporterAvatar, agentBadgeHtml } from './supporter-ui.js';
+import { trackEvent } from './analytics-client.js';
 
 let leaderboardData = null;
 let leaderboardTab = 'monthly';
@@ -17,6 +18,7 @@ export function toggleLeaderboard() {
 
 export function switchLeaderboardTab(tab) {
   leaderboardTab = tab;
+  void trackEvent('leaderboard_tab_selected', null, { tab });
   const lb = document.getElementById('leaderboard-view');
   if (lb && leaderboardData) renderLeaderboardContent(lb, leaderboardData);
 }
@@ -25,11 +27,14 @@ async function showLeaderboard() {
   if (state.profileVisible) hideProfileView();
   const win = document.getElementById('preview-window');
   const lb = document.getElementById('leaderboard-view');
+  const previewArea = document.querySelector('.preview-area');
   if (!win || !lb) return;
 
   state.setLeaderboardVisible(true);
   win.style.display = 'none';
   lb.style.display = '';
+  previewArea?.classList.add('preview-area--detail');
+  void trackEvent('leaderboard_viewed', null, { source: 'toggle' });
 
   leaderboardData = await fetchLeaderboard();
   renderLeaderboardContent(lb, leaderboardData);
@@ -144,15 +149,18 @@ function startCountdownTimer() {
 function hideProfileView() {
   const win = document.getElementById('preview-window');
   const pv = document.getElementById('profile-view');
+  const previewArea = document.querySelector('.preview-area');
   if (!win || !pv) return;
   state.setProfileVisible(false);
   pv.style.display = 'none';
   win.style.display = '';
+  if (!state.leaderboardVisible) previewArea?.classList.remove('preview-area--detail');
 }
 
 export function hideLeaderboard() {
   const win = document.getElementById('preview-window');
   const lb = document.getElementById('leaderboard-view');
+  const previewArea = document.querySelector('.preview-area');
   if (!win || !lb) return;
 
   if (countdownInterval) {
@@ -163,4 +171,5 @@ export function hideLeaderboard() {
   state.setLeaderboardVisible(false);
   lb.style.display = 'none';
   win.style.display = '';
+  if (!state.profileVisible) previewArea?.classList.remove('preview-area--detail');
 }

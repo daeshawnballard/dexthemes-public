@@ -10,6 +10,7 @@ import {
   maybeShowPendingUnlockDelighter,
 } from './preview-chat.js';
 import { showToast } from './toasts.js';
+import { trackEvent } from './analytics-client.js';
 import { authFetch } from './session-auth.js';
 
 export async function grantUnlockAction(action) {
@@ -29,6 +30,12 @@ export async function grantUnlockAction(action) {
       const data = await res.json();
       if (data.unlocked) {
         state.userUnlocks.add(unlock.themeId);
+        void trackEvent('unlock_granted', null, {
+          action,
+          theme_id: data.themeId || unlock.themeId,
+          theme_name: data.themeName || unlock.name,
+          source: 'action',
+        });
         const { renderAuthUI } = await import('./auth.js');
         renderAuthUI();
         if (window.innerWidth <= 1024) {
@@ -121,6 +128,13 @@ export async function recordSecretInteraction(activity) {
     if (!data.unlocked || !data.themeId) return;
 
     state.userUnlocks.add(data.themeId);
+    void trackEvent('unlock_granted', null, {
+      action: 'secret_interaction',
+      theme_id: data.themeId,
+      theme_name: data.themeName || 'Easter Egg',
+      source: 'secret_interaction',
+      secret: true,
+    });
     const { renderAuthUI } = await import('./auth.js');
     renderAuthUI();
     if (window.innerWidth <= 1024) {

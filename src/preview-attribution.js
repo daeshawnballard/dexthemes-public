@@ -3,6 +3,7 @@ import { escapeHtml } from './utils.js';
 import { supporterMarkHtml, agentBadgeHtml } from './supporter-ui.js';
 import { flagTheme, showToast } from './api.js';
 import { getThemeAttribution } from './theme-attribution-model.js';
+import { trackEvent } from './analytics-client.js';
 
 export function syncAttributionOverlay(theme = state.selectedTheme) {
   const chat = document.getElementById('preview-chat');
@@ -52,6 +53,10 @@ export function reportThemeName() {
 
   const prompt = document.createElement('div');
   prompt.className = 'assistant-msg report-theme-confirm-msg';
+  void trackEvent('report_started', null, {
+    theme_id: state.selectedTheme.id,
+    theme_name: state.selectedTheme.name,
+  });
   prompt.innerHTML = `
     <div class="assistant-inline-card assistant-inline-card--warning attribution-card attribution-card--confirm">
       <div class="assistant-inline-body">Report "<span class="locked-theme-name">${escapeHtml(state.selectedTheme.name)}</span>" for an offensive name?</div>
@@ -75,6 +80,10 @@ export function confirmThemeNameReport() {
   cancelThemeNameReport();
 
   if (state.selectedTheme._convexId) {
+    void trackEvent('report_submitted', null, {
+      theme_id: state.selectedTheme.id,
+      theme_name: state.selectedTheme.name,
+    });
     flagTheme(state.selectedTheme._convexId, 'Offensive theme name');
   } else {
     showToast('Reporting is only available for published community themes', 'error');

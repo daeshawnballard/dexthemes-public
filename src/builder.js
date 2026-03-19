@@ -10,8 +10,10 @@ import { syncAttributionOverlay } from './preview-attribution.js';
 import { isMobile } from './mobile.js';
 import { trackEvent } from './analytics.js';
 import { signInWith } from './auth.js';
-import { getApplyButtonCopy, showApplyHandoffMessage } from './codex-handoff.js';
+import { getApplyButtonCopy, openCodexSettings, showApplyHandoffMessage } from './codex-handoff.js';
 import { grantUnlockAction } from './unlock-api.js';
+
+let builderCreationTracked = false;
 
 const LUCKY_ADJECTIVES = ['Cosmic', 'Neon', 'Velvet', 'Ember', 'Frozen', 'Solar', 'Midnight', 'Crystal', 'Thunder', 'Phantom', 'Ruby', 'Jade', 'Amber', 'Silver', 'Golden', 'Copper', 'Cobalt', 'Crimson', 'Indigo', 'Scarlet'];
 const LUCKY_NOUNS = ['Horizon', 'Circuit', 'Drift', 'Pulse', 'Aurora', 'Nebula', 'Prism', 'Forge', 'Cascade', 'Vertex', 'Bloom', 'Cipher', 'Wave', 'Storm', 'Spark', 'Flame', 'Shade', 'Frost', 'Tide', 'Glow'];
@@ -51,6 +53,20 @@ function loadBuilderState() {
   return null;
 }
 
+function resetBuilderCreationTracking() {
+  builderCreationTracked = false;
+}
+
+function maybeTrackThemeCreated(method) {
+  if (builderCreationTracked || state.builderColors?._addVariantFor) return;
+  builderCreationTracked = true;
+  trackEvent('theme_created', null, {
+    source: 'builder',
+    method,
+    variant: state.builderColors?.variant || 'dark',
+  });
+}
+
 async function maybeShowBuilderSubmitPrompt() {
   if (state.currentUser || localStorage.getItem('dexthemes-builder-signin-prompt-seen') === '1') return;
   localStorage.setItem('dexthemes-builder-signin-prompt-seen', '1');
@@ -61,6 +77,7 @@ async function maybeShowBuilderSubmitPrompt() {
 export function resetBuilder() {
   trackEvent('builder_reset');
   state.setBuilderColors(getDefaultBuilderColors());
+  resetBuilderCreationTracking();
   localStorage.removeItem('dexthemes-builder');
   renderBuilderPanel();
   applyBuilderPreview();
@@ -111,6 +128,7 @@ export function colorMeLucky() {
   saveBuilderState();
   renderBuilderPanel();
   applyBuilderPreview();
+  maybeTrackThemeCreated('color_me_lucky');
   trackEvent('color_me_lucky', null, { variant: b.variant });
   // Trigger kaleidoscope unlock
   grantUnlockAction('color_me_lucky');
@@ -148,11 +166,11 @@ export function colorMeLuckyVariant(variant) {
 }
 
 export function toggleBuilderMode() {
-  trackEvent('builder_toggled', null, { mode: state.panelMode === 'builder' ? 'closing' : 'opening' });
   const btn = document.getElementById('submit-btn');
   const textEl = document.getElementById('submit-btn-text');
   const iconEl = btn.querySelector('svg');
   if (state.panelMode === 'builder') {
+    trackEvent('builder_closed', null, { source: 'toggle' });
     state.setPanelMode('preview');
     textEl.textContent = 'Create a theme';
     iconEl.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
@@ -161,8 +179,10 @@ export function toggleBuilderMode() {
     syncAttributionOverlay();
     renderRightPanel();
   } else {
+    trackEvent('builder_opened', null, { source: 'toggle' });
     state.setPanelMode('builder');
     state.setBuilderColors(loadBuilderState() || getDefaultBuilderColors());
+    resetBuilderCreationTracking();
     localStorage.removeItem('dexthemes-builder-signin-prompt-seen');
     textEl.textContent = 'Back to browsing';
     iconEl.innerHTML = '<polyline points="15 18 9 12 15 6"/>';
@@ -191,6 +211,7 @@ export async function openBuilderForVariant(themeId, variant) {
     contrast: 60,
     _addVariantFor: themeId,
   });
+  resetBuilderCreationTracking();
   localStorage.removeItem('dexthemes-builder-signin-prompt-seen');
 
   const btn = document.getElementById('submit-btn');
@@ -315,6 +336,7 @@ export function onBuilderNameInput(val) {
   void maybeShowBuilderSubmitPrompt();
   state.builderColors.name = val;
   saveBuilderState();
+  if (val.trim()) maybeTrackThemeCreated('name_input');
   const warning = document.getElementById('builder-name-warning');
   const input = document.getElementById('builder-name');
   if (val.trim()) {
@@ -346,6 +368,7 @@ export function updateBuilderColor(key, value) {
   if (!value.startsWith('#')) value = '#' + value;
   if (!/^#[0-9a-fA-F]{6}$/.test(value)) return;
   state.builderColors[key] = value;
+  maybeTrackThemeCreated('color_update');
   saveBuilderState();
   renderBuilderPanel();
   applyBuilderPreview();
@@ -365,6 +388,7 @@ export function setBuilderVariant(v) {
     state.builderColors.sidebar = '#141428';
     state.builderColors.codeBg = '#12122a';
   }
+  maybeTrackThemeCreated('variant_switch');
   saveBuilderState();
   renderBuilderPanel();
   applyBuilderPreview();
@@ -407,13 +431,19 @@ export function applyBuilderToCodex() {
   const compact = isMobile();
   const applyCopy = getApplyButtonCopy(compact);
   const afterCopy = () => {
+    trackEvent('theme_applied', null, {
+      theme_id: '_builder',
+      theme_name: displayName,
+      variant: b.variant,
+      source: 'builder',
+      custom: true,
+      mobile: compact,
+    });
     if (textEl) textEl.textContent = applyCopy.successLabel;
     if (btn) btn.classList.add('copied');
     if (hint) hint.textContent = compact ? 'Paste it into Codex later.' : applyCopy.hintText;
     if (!compact) {
-      setTimeout(() => {
-        window.open('codex://settings', '_blank');
-      }, 300);
+      setTimeout(openCodexSettings, 300);
     }
     showApplyHandoffMessage({
       themeName: displayName,

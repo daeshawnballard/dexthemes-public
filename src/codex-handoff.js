@@ -10,6 +10,38 @@ export function getApplyButtonCopy(compact) {
   };
 }
 
+let codexLaunchFrame = null;
+let codexLaunchResetTimer = null;
+
+export function openCodexSettings() {
+  if (typeof document === 'undefined') return;
+
+  if (!codexLaunchFrame) {
+    codexLaunchFrame = document.createElement('iframe');
+    codexLaunchFrame.setAttribute('aria-hidden', 'true');
+    codexLaunchFrame.tabIndex = -1;
+    codexLaunchFrame.style.position = 'absolute';
+    codexLaunchFrame.style.width = '1px';
+    codexLaunchFrame.style.height = '1px';
+    codexLaunchFrame.style.opacity = '0';
+    codexLaunchFrame.style.pointerEvents = 'none';
+    codexLaunchFrame.style.border = '0';
+    codexLaunchFrame.style.left = '-9999px';
+    document.body.appendChild(codexLaunchFrame);
+  }
+
+  if (codexLaunchResetTimer) {
+    clearTimeout(codexLaunchResetTimer);
+    codexLaunchResetTimer = null;
+  }
+
+  codexLaunchFrame.src = 'codex://settings';
+  codexLaunchResetTimer = window.setTimeout(() => {
+    if (codexLaunchFrame) codexLaunchFrame.removeAttribute('src');
+    codexLaunchResetTimer = null;
+  }, 1500);
+}
+
 export function showApplyHandoffMessage({ themeName, variant }) {
   const chat = document.getElementById('preview-chat');
   if (!chat) return;

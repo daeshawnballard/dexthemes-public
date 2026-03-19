@@ -12,6 +12,7 @@ import { showSubmitDelighter } from './preview-chat.js';
 import { activateModalFocusTrap, deactivateModalFocusTrap } from './modal-a11y.js';
 import { showToast } from './toasts.js';
 import { grantUnlockAction } from './unlock-api.js';
+import { trackEvent } from './analytics-client.js';
 import { authFetch } from './session-auth.js';
 
 function checkColorCopying(newDark, newLight) {
@@ -75,6 +76,12 @@ export async function submitFromBuilder() {
       if (existing) existing[variant] = variantData;
 
       grantUnlockAction('complete_pair');
+      void trackEvent('theme_variant_added', null, {
+        theme_id: b._addVariantFor,
+        theme_name: b.name.trim(),
+        variant,
+        source: 'builder',
+      });
       showToast(`${variant === 'dark' ? 'Dark' : 'Light'} variant added! You unlocked Yin & Yang 🎉`);
       showSubmitDelighter(b.name.trim(), variant, variantData);
 
@@ -123,6 +130,14 @@ export async function submitFromBuilder() {
     }
 
     grantUnlockAction('create_theme');
+    void trackEvent('theme_submitted', null, {
+      theme_id: themeId,
+      theme_name: b.name.trim(),
+      variant,
+      has_dark: variant === 'dark',
+      has_light: variant === 'light',
+      source: 'builder',
+    });
     showSubmitDelighter(b.name.trim(), variant, variantData);
 
     THEMES.push({
@@ -239,6 +254,14 @@ export async function submitJsonFromModal() {
     dismissSubmitJsonModal();
     showToast('Theme submitted to the community gallery!');
     grantUnlockAction('create_theme');
+    void trackEvent('theme_submitted', null, {
+      theme_id: payload.themeId,
+      theme_name: payload.name,
+      variant: parsed.dark ? (parsed.light ? 'both' : 'dark') : 'light',
+      has_dark: !!parsed.dark,
+      has_light: !!parsed.light,
+      source: 'json_modal',
+    });
 
     THEMES.push({
       id: payload.themeId,

@@ -72,7 +72,8 @@ export default defineSchema({
     createdAt: v.number(),
   })
     .index("by_copy_key", ["copyKey"])
-    .index("by_theme", ["themeId"]),
+    .index("by_theme", ["themeId"])
+    .index("by_user", ["userId"]),
 
   rateLimits: defineTable({
     key: v.string(), // e.g. "agent-reg:192.168.1.1" or "submit:userId123"
