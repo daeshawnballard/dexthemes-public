@@ -253,7 +253,7 @@
   flex-direction: column;
   gap: 8px;
   margin-top: auto;
-  padding: 14px 16px 8px;
+  padding: 14px 16px 16px;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
   transition: border-color var(--transition);
