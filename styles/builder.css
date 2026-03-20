@@ -260,10 +260,7 @@
 }
 
 .builder-submit-slot {
-  display: flex;
-  align-items: center;
-  min-height: 54px;
-  margin-bottom: 2px;
+  margin-bottom: 6px;
 }
 
 .builder-share-btn {
