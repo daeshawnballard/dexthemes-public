@@ -69,6 +69,8 @@ That rebuilds the hashed shell and assets as files change.
 
 `dist/` is generated output only. Build it locally when you need it, but do not commit it.
 
+Root-served static files like `manifest.json`, `robots.txt`, `sitemap.xml`, `llms*.txt`, and the app icons are sourced from `public/` and emitted to the deploy root during `npm run build`. Edit the files under `public/`, not the generated root copies.
+
 ### Backend (Convex)
 
 If you want to work on auth, likes, or community themes:

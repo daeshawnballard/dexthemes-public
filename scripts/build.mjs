@@ -1,17 +1,28 @@
 import { build, context } from "esbuild";
 import { createHash } from "node:crypto";
-import { mkdir, readFile, rm, writeFile, watch } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, writeFile, watch } from "node:fs/promises";
 import path from "node:path";
 import { generateThemeApiCatalog } from "./generate-theme-api-catalog.mjs";
 
 const root = process.cwd();
 const distAssetsDir = path.join(root, "dist", "assets");
+const publicDir = path.join(root, "public");
 const appEntry = path.join(root, "src", "main.js");
 const templatePath = path.join(root, "templates", "index.template.html");
 const swTemplatePath = path.join(root, "templates", "sw.template.js");
 const stylesPath = path.join(root, "styles", "index.css");
 const themeBundlePath = path.join(root, "theme-data", "dexthemes", "bundle.js");
 const isWatch = process.argv.includes("--watch");
+const staticPublicFiles = [
+  "manifest.json",
+  "robots.txt",
+  "sitemap.xml",
+  "llms.txt",
+  "llms-full.txt",
+  "apple-touch-icon.png",
+  "favicon.svg",
+  "icon-192.png",
+];
 
 function contentHash(buffer) {
   return createHash("sha256").update(buffer).digest("hex").slice(0, 10);
@@ -51,6 +62,13 @@ async function copyHashedAsset(sourcePath, outputPrefix, ext) {
   const outputPath = path.join(distAssetsDir, fileName);
   await writeFile(outputPath, buffer);
   return `/dist/assets/${fileName}`;
+}
+
+async function syncPublicFiles() {
+  await mkdir(publicDir, { recursive: true });
+  for (const fileName of staticPublicFiles) {
+    await copyFile(path.join(publicDir, fileName), path.join(root, fileName));
+  }
 }
 
 async function writeGeneratedIndex({ stylesheetHref, themeBundleHref, bootHref }) {
@@ -140,11 +158,15 @@ function createEsbuildOptions() {
 async function cleanDist() {
   await rm(path.join(root, "dist"), { recursive: true, force: true });
   await mkdir(distAssetsDir, { recursive: true });
+  for (const fileName of staticPublicFiles) {
+    await rm(path.join(root, fileName), { force: true });
+  }
 }
 
 async function runBuildOnce() {
   await generateThemeApiCatalog();
   await cleanDist();
+  await syncPublicFiles();
   const result = await build(createEsbuildOptions());
   await generateArtifacts(result.metafile);
 }
@@ -159,6 +181,7 @@ async function runWatch() {
     rebuilding = rebuilding.then(async () => {
       await generateThemeApiCatalog();
       const result = await ctx.rebuild();
+      await syncPublicFiles();
       await generateArtifacts(result.metafile);
       console.log("DexThemes build updated");
     }).catch((error) => {
@@ -167,6 +190,7 @@ async function runWatch() {
   };
 
   await ctx.watch();
+  await syncPublicFiles();
   await generateArtifacts((await ctx.rebuild()).metafile);
 
   const extraFiles = [templatePath, swTemplatePath, stylesPath, themeBundlePath];
@@ -181,6 +205,13 @@ async function runWatch() {
 
   (async () => {
     const watcher = watch(path.join(root, "styles"), { recursive: true });
+    for await (const _event of watcher) {
+      rebuildAll();
+    }
+  })();
+
+  (async () => {
+    const watcher = watch(publicDir, { recursive: true });
     for await (const _event of watcher) {
       rebuildAll();
     }

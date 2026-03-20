@@ -2,6 +2,14 @@
 .claude/
 .playwright-cli/
 dist/
+/manifest.json
+/robots.txt
+/sitemap.xml
+/llms.txt
+/llms-full.txt
+/apple-touch-icon.png
+/favicon.svg
+/icon-192.png
 node_modules/
 output/
 .env.local
