@@ -134,7 +134,7 @@ async function dispatchAction(action, element, event) {
     case 'builder-apply-codex':
       return loadBuilderModule().then((m) => m.applyBuilderToCodex());
     case 'builder-submit':
-      return import('./theme-submission-api.js').then((m) => m.submitFromBuilder());
+      return loadBuilderModule().then((m) => m.startBuilderSubmit());
     case 'builder-update-color':
       return loadBuilderModule().then((m) => m.updateBuilderColor(element.dataset.colorKey || '', element.value || ''));
     case 'submit-json-close':

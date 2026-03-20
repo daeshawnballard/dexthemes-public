@@ -39,9 +39,19 @@ export function appendAssistantMessage(className, html) {
   return msg;
 }
 
-export function showInlineSignInPrompt(type, message) {
+export function showInlineSignInPrompt(type, message, options = {}) {
   const chat = document.getElementById('preview-chat');
-  if (!chat || chat.querySelector(`.${type}-signin-prompt`)) return;
+  if (!chat) return;
+
+  const existing = chat.querySelector(`.${type}-signin-prompt`);
+  if (existing) {
+    if (options.prepend && existing !== chat.firstElementChild) {
+      chat.prepend(existing);
+    }
+    existing.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    return existing;
+  }
+
   const msg = document.createElement('div');
   msg.className = `assistant-msg ${type}-signin-prompt`;
   msg.innerHTML = buildInlineCardHtml({
@@ -50,8 +60,14 @@ export function showInlineSignInPrompt(type, message) {
     tone: 'accent',
     actions: `<a class="assistant-inline-link" href="#" data-action="sign-in" data-provider="github" data-prevent-default="true">Continue with GitHub →</a>`,
   });
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
+  if (options.prepend) {
+    chat.prepend(msg);
+  } else {
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  msg.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  return msg;
 }
 
 export function showSystemMessage(message, className = 'system-msg') {

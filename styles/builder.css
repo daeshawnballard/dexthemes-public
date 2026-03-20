@@ -259,6 +259,13 @@
   transition: border-color var(--transition);
 }
 
+.builder-submit-slot {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  margin-bottom: 2px;
+}
+
 .builder-share-btn {
   width: 100%;
   padding: 9px 14px;
@@ -411,15 +418,27 @@
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
-  border: none;
+  border: 1px solid transparent;
   background: #22c55e;
   color: #fff;
   transition: all 0.15s;
-  margin-top: 6px;
+  margin-top: 0;
 }
 
 .builder-submit-btn:hover {
   filter: brightness(1.1);
+}
+
+.builder-submit-btn--signin {
+  background: color-mix(in srgb, #22c55e 12%, var(--surface));
+  border-color: color-mix(in srgb, #22c55e 38%, var(--border));
+  color: var(--text-primary);
+}
+
+.builder-submit-btn--signin:hover {
+  filter: none;
+  border-color: color-mix(in srgb, #22c55e 54%, var(--border));
+  background: color-mix(in srgb, #22c55e 16%, var(--surface));
 }
 
 .builder-github-signin {
@@ -463,4 +482,3 @@
 .builder-signin-link:hover {
   text-decoration: underline;
 }
-

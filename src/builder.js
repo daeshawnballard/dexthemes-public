@@ -74,6 +74,27 @@ async function maybeShowBuilderSubmitPrompt() {
   showInlineSignInPrompt('builder', 'You can keep building and copy this theme without an account. Sign in only if you want to submit it to the community.');
 }
 
+export async function startBuilderSubmit() {
+  if (isMobile()) {
+    const mobileSubmit = await import('./mobile-submit.js');
+    mobileSubmit.mobileStartSubmit();
+    return;
+  }
+
+  if (!state.currentUser) {
+    const { showInlineSignInPrompt } = await import('./preview-chat.js');
+    showInlineSignInPrompt(
+      'builder-submit',
+      'You can keep building and copy this theme without an account. Sign in only if you want to submit it to the community.',
+      { prepend: true },
+    );
+    return;
+  }
+
+  const submission = await import('./theme-submission-api.js');
+  await submission.submitFromBuilder();
+}
+
 export function resetBuilder() {
   trackEvent('builder_reset');
   state.setBuilderColors(getDefaultBuilderColors());
@@ -297,6 +318,17 @@ export function renderBuilderPanel() {
     </div>
 
     <div class="builder-actions">
+      ${isCompactBuilder ? '' : `
+        <div class="builder-submit-slot">
+          <button
+            class="builder-submit-btn${state.currentUser ? '' : ' builder-submit-btn--signin'}"
+            type="button"
+            data-action="builder-submit"
+          >
+            Submit to community &rarr;
+          </button>
+        </div>
+      `}
       ${isCompactBuilder ? `
         <div class="builder-mobile-lucky-row">
           <button class="builder-lucky-btn builder-lucky-dark" data-action="builder-color-lucky-variant" data-variant="dark">
@@ -315,15 +347,6 @@ export function renderBuilderPanel() {
         <span class="builder-apply-btn-text">${applyCopy.defaultLabel}</span>
       </button>
       ${isCompactBuilder ? '' : `<div class="import-hint builder-import-hint">${applyCopy.hintText}</div>`}
-      <div class="builder-submit-links">
-        ${state.currentUser ? `
-          <button class="builder-submit-btn" type="button" data-action="builder-submit">
-            Submit to community &rarr;
-          </button>
-        ` : `
-          
-        `}
-      </div>
     </div>
   `;
 
