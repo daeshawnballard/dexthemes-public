@@ -67,6 +67,8 @@ npm run watch
 
 That rebuilds the hashed shell and assets as files change.
 
+`dist/` is generated output only. Build it locally when you need it, but do not commit it.
+
 ### Backend (Convex)
 
 If you want to work on auth, likes, or community themes:
