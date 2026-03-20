@@ -142,8 +142,8 @@ requestAnimationFrame(() => {
 function scheduleCommunityThemeLoad() {
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const deferMs = connection?.saveData || /^(slow-2g|2g)$/.test(connection?.effectiveType || '')
-    ? 1800
-    : 350;
+    ? 1200
+    : 50;
 
   let scheduled = false;
   const run = () => {
@@ -154,17 +154,8 @@ function scheduleCommunityThemeLoad() {
     }, deferMs);
   };
 
-  if (isCompactViewport()) {
-    if (document.readyState === 'complete') {
-      run();
-    } else {
-      window.addEventListener('load', run, { once: true });
-    }
-    return;
-  }
-
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(run, { timeout: 2500 });
+  if (document.readyState === 'complete') {
+    run();
   } else {
     window.addEventListener('load', run, { once: true });
   }

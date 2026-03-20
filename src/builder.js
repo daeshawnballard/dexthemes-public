@@ -3,7 +3,7 @@
 // ================================================
 
 import * as state from './state.js';
-import { escapeHtml, isDark, fallbackCopy } from './utils.js';
+import { escapeHtml, isDark, fallbackCopy, slugify } from './utils.js';
 import { applyShellTheme, applyPreview } from './theme-engine.js';
 import { renderRightPanel } from './preview-shell.js';
 import { syncAttributionOverlay } from './preview-attribution.js';
@@ -357,6 +357,12 @@ export function renderBuilderPanel() {
 
 export function onBuilderNameInput(val) {
   void maybeShowBuilderSubmitPrompt();
+  if (state.builderColors._addVariantFor) {
+    const nextThemeId = val.trim() ? slugify(val.trim()) : '';
+    if (nextThemeId !== state.builderColors._addVariantFor) {
+      delete state.builderColors._addVariantFor;
+    }
+  }
   state.builderColors.name = val;
   saveBuilderState();
   if (val.trim()) maybeTrackThemeCreated('name_input');

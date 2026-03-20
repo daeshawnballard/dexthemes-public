@@ -20,6 +20,73 @@ function checkColorCopying(newDark, newLight) {
   return protection.reason || null;
 }
 
+function persistBuilderState() {
+  if (!state.builderColors) return;
+  localStorage.setItem('dexthemes-builder', JSON.stringify(state.builderColors));
+}
+
+function markBuilderForVariantAdd(themeId) {
+  state.builderColors._addVariantFor = themeId;
+  persistBuilderState();
+}
+
+function findOwnedCommunityTheme(themeId) {
+  return THEMES.find((theme) =>
+    theme.id === themeId &&
+    theme.category === 'community' &&
+    (
+      theme._authorId === state.currentUser?._id ||
+      theme._authorName === (state.currentUser?.displayName || state.currentUser?.username)
+    ));
+}
+
+async function addVariantToExistingTheme(themeId, themeName, variant, variantData) {
+  const res = await authFetch(CONVEX_SITE_URL + '/themes/add-variant', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      themeId,
+      variant: variantData,
+      variantKey: variant,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    showToast(data.error || 'Failed to add variant', 'error');
+    return false;
+  }
+
+  const existing = THEMES.find((theme) => theme.id === themeId);
+  if (existing) existing[variant] = variantData;
+
+  grantUnlockAction('complete_pair');
+  void trackEvent('theme_variant_added', null, {
+    theme_id: themeId,
+    theme_name: themeName,
+    variant,
+    source: 'builder',
+  });
+  showToast(`${variant === 'dark' ? 'Dark' : 'Light'} variant added! You unlocked Yin & Yang 🎉`);
+  showSubmitDelighter(themeName, variant, variantData);
+
+  state.setPanelMode('preview');
+  if (existing) {
+    state.setSelectedTheme(existing);
+    state.setSelectedVariant(variant);
+  }
+  const { renderRightPanel } = await import('./preview-shell.js');
+  const { syncAttributionOverlay } = await import('./preview-attribution.js');
+  const { applyShellTheme, applyPreview } = await import('./theme-engine.js');
+  applyShellTheme(state.selectedTheme, state.selectedVariant);
+  applyPreview(state.selectedTheme, state.selectedVariant);
+  syncAttributionOverlay();
+  renderRightPanel();
+  renderSidebar();
+  return true;
+}
+
 export async function submitFromBuilder() {
   if (!state.currentUser) {
     showToast('Sign in to submit themes', 'error');
@@ -55,49 +122,13 @@ export async function submitFromBuilder() {
 
   if (b._addVariantFor) {
     try {
-      const res = await authFetch(CONVEX_SITE_URL + '/themes/add-variant', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          themeId: b._addVariantFor,
-          variant: variantData,
-          variantKey: variant,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        showToast(data.error || 'Failed to add variant', 'error');
-        return;
-      }
-
-      const existing = THEMES.find((theme) => theme.id === b._addVariantFor);
-      if (existing) existing[variant] = variantData;
-
-      grantUnlockAction('complete_pair');
-      void trackEvent('theme_variant_added', null, {
-        theme_id: b._addVariantFor,
-        theme_name: b.name.trim(),
+      const added = await addVariantToExistingTheme(
+        b._addVariantFor,
+        b.name.trim(),
         variant,
-        source: 'builder',
-      });
-      showToast(`${variant === 'dark' ? 'Dark' : 'Light'} variant added! You unlocked Yin & Yang 🎉`);
-      showSubmitDelighter(b.name.trim(), variant, variantData);
-
-      state.setPanelMode('preview');
-      if (existing) {
-        state.setSelectedTheme(existing);
-        state.setSelectedVariant(variant);
-      }
-      const { renderRightPanel } = await import('./preview-shell.js');
-      const { syncAttributionOverlay } = await import('./preview-attribution.js');
-      const { applyShellTheme, applyPreview } = await import('./theme-engine.js');
-      applyShellTheme(state.selectedTheme, state.selectedVariant);
-      applyPreview(state.selectedTheme, state.selectedVariant);
-      syncAttributionOverlay();
-      renderRightPanel();
-      renderSidebar();
+        variantData,
+      );
+      if (!added) return;
     } catch (error) {
       showToast('Network error — try again', 'error');
     }
@@ -125,6 +156,19 @@ export async function submitFromBuilder() {
     });
     const data = await res.json();
     if (!res.ok) {
+      if (data.error === 'A theme with this ID already exists') {
+        const existing = findOwnedCommunityTheme(themeId);
+        if (existing && !existing[variant]) {
+          markBuilderForVariantAdd(themeId);
+          const added = await addVariantToExistingTheme(
+            themeId,
+            b.name.trim(),
+            variant,
+            variantData,
+          );
+          if (added) return;
+        }
+      }
       showToast(data.error || 'Submission failed', 'error');
       return;
     }
@@ -140,7 +184,7 @@ export async function submitFromBuilder() {
     });
     showSubmitDelighter(b.name.trim(), variant, variantData);
 
-    THEMES.push({
+    const createdTheme = {
       id: themeId,
       name: b.name.trim(),
       category: 'community',
@@ -155,7 +199,12 @@ export async function submitFromBuilder() {
       _authorIsSupporter: state.isCurrentUserSupporter(),
       _authorIsAgent: state.currentUser.provider === 'agent',
       _summary: summary,
-    });
+      _authorId: state.currentUser._id,
+      _convexId: data.theme?._id,
+      _variantRequests: 0,
+    };
+    THEMES.push(createdTheme);
+    markBuilderForVariantAdd(themeId);
     renderSidebar();
   } catch (error) {
     showToast('Network error — try again', 'error');
