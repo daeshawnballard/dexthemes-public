@@ -1,17 +1,17 @@
-import "./chunk-74BYE2WA.js";
+import "./chunk-KOTLV75L.js";
 import {
   getApplyButtonCopy,
   openCodexSettings,
   renderRightPanel,
   showApplyHandoffMessage,
   syncAttributionOverlay
-} from "./chunk-264VTVHR.js";
-import "./chunk-UVHJ3RM5.js";
+} from "./chunk-7X5RAJGH.js";
+import "./chunk-EKIPJH3K.js";
 import "./chunk-7G6IZZN4.js";
 import {
   isMobile
-} from "./chunk-HPG5GS5V.js";
-import "./chunk-ORYVDDEU.js";
+} from "./chunk-52TFRFFQ.js";
+import "./chunk-CAOOIVHI.js";
 import {
   applyPreview,
   applyShellTheme
@@ -21,9 +21,9 @@ import {
 } from "./chunk-ITEHFHDV.js";
 import {
   grantUnlockAction
-} from "./chunk-AS4UEZ2Z.js";
-import "./chunk-BGJQVKXT.js";
-import "./chunk-3EUCQPQS.js";
+} from "./chunk-623EO64G.js";
+import "./chunk-NLYGQIT6.js";
+import "./chunk-7HISW65R.js";
 import {
   escapeHtml,
   fallbackCopy,
@@ -92,7 +92,7 @@ function maybeTrackThemeCreated(method) {
 async function maybeShowBuilderSubmitPrompt() {
   if (currentUser || localStorage.getItem("dexthemes-builder-signin-prompt-seen") === "1") return;
   localStorage.setItem("dexthemes-builder-signin-prompt-seen", "1");
-  const { showInlineSignInPrompt } = await import("./chunk-DYFUO3KF.js");
+  const { showInlineSignInPrompt } = await import("./chunk-V66HNG7U.js");
   showInlineSignInPrompt("builder", "You can keep building and copy this theme without an account. Sign in only if you want to submit it to the community.");
 }
 function resetBuilder() {
@@ -153,7 +153,7 @@ function colorMeLuckyVariant(variant) {
   builderColors.variant = variant;
   colorMeLucky();
   if (isMobile()) {
-    import("./chunk-GZAGJ7HH.js").then((m) => m.mobileSetView("create"));
+    import("./chunk-72YRHB4Q.js").then((m) => m.mobileSetView("create"));
   }
   setTimeout(() => {
     const previewContent = document.querySelector(".preview-chat");

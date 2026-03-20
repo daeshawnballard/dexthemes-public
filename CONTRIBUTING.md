@@ -15,7 +15,7 @@ Themes live in `theme-data/dexthemes/` organized by category. To add a new theme
 4. Test locally (see below) to make sure the preview looks good.
 5. Open a pull request with a screenshot of the theme in the preview.
 
-See `theme-submission-example.json` and `themes.schema.json` for the full schema.
+See `docs/theme-submission-example.json` and `docs/themes.schema.json` for the full schema.
 
 ### Theme variant colors
 

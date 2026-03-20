@@ -1,6 +1,6 @@
 import {
   renderSidebar
-} from "./chunk-ORYVDDEU.js";
+} from "./chunk-CAOOIVHI.js";
 import {
   applyPreview,
   applyShellTheme,
@@ -15,14 +15,14 @@ import {
   recordSecretInteraction,
   showToast,
   trackEvent
-} from "./chunk-AS4UEZ2Z.js";
+} from "./chunk-623EO64G.js";
 import {
   agentBadgeHtml,
   supporterMarkHtml
-} from "./chunk-BGJQVKXT.js";
+} from "./chunk-NLYGQIT6.js";
 import {
   loadBuilderModule
-} from "./chunk-3EUCQPQS.js";
+} from "./chunk-7HISW65R.js";
 import {
   escapeHtml,
   fallbackCopy
@@ -255,11 +255,11 @@ function recordThemeCopy(themeId) {
   });
 }
 async function showInlineSignInPrompt(type, message) {
-  const chat = await import("./chunk-DYFUO3KF.js");
+  const chat = await import("./chunk-V66HNG7U.js");
   chat.showInlineSignInPrompt(type, message);
 }
 async function showSystemMessage(message, className) {
-  const chat = await import("./chunk-DYFUO3KF.js");
+  const chat = await import("./chunk-V66HNG7U.js");
   chat.showSystemMessage(message, className);
 }
 function renderAccentDots() {
@@ -708,7 +708,7 @@ async function checkOnboarding() {
   if (window.innerWidth > 1024) {
     const showcase = THEMES.find((theme) => theme.id === "current-valentine") || THEMES.find((theme) => theme.category === "dexthemes");
     if (showcase) {
-      const actions = await import("./chunk-K6G3FXLJ.js");
+      const actions = await import("./chunk-PTHB4FIP.js");
       await actions.selectThemeById(showcase.id);
     }
   }
@@ -776,7 +776,7 @@ async function loadCommunityThemes() {
         if (restored) {
           setSelectedTheme(restored);
           const { applyShellTheme: applyShellTheme2, applyPreview: applyPreview2 } = await import("./chunk-6B6UELWF.js");
-          const { syncAttributionOverlay: syncAttributionOverlay2 } = await import("./chunk-K6G3FXLJ.js");
+          const { syncAttributionOverlay: syncAttributionOverlay2 } = await import("./chunk-PTHB4FIP.js");
           applyShellTheme2(restored, selectedVariant);
           applyPreview2(restored, selectedVariant);
           syncAttributionOverlay2(restored);

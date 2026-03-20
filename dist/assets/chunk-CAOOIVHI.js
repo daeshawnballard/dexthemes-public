@@ -7,7 +7,7 @@ import {
 } from "./chunk-ITEHFHDV.js";
 import {
   loadMobileBrowseModule
-} from "./chunk-3EUCQPQS.js";
+} from "./chunk-7HISW65R.js";
 import {
   escapeHtml
 } from "./chunk-AOBV4U4T.js";

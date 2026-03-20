@@ -2,10 +2,10 @@ import {
   appendSecretUnlockDelighter,
   appendUnlockDelighter,
   maybeShowPendingUnlockDelighter
-} from "./chunk-BGJQVKXT.js";
+} from "./chunk-NLYGQIT6.js";
 import {
   loadAnalyticsModule
-} from "./chunk-3EUCQPQS.js";
+} from "./chunk-7HISW65R.js";
 import {
   CONVEX_SITE_URL,
   UNLOCK_THEMES,
@@ -134,10 +134,10 @@ async function grantUnlockAction(action) {
           theme_name: data.themeName || unlock.name,
           source: "action"
         });
-        const { renderAuthUI } = await import("./chunk-4DG57NRL.js");
+        const { renderAuthUI } = await import("./chunk-EQRNFWFY.js");
         renderAuthUI();
         if (window.innerWidth <= 1024) {
-          const { renderMobileBrowse } = await import("./chunk-E24C3YER.js");
+          const { renderMobileBrowse } = await import("./chunk-YD6PWNCT.js");
           renderMobileBrowse();
         }
         await appendUnlockDelighter(action, unlock, fetchLeaderboard);
@@ -224,13 +224,13 @@ async function recordSecretInteraction(activity) {
       source: "secret_interaction",
       secret: true
     });
-    const { renderAuthUI } = await import("./chunk-4DG57NRL.js");
+    const { renderAuthUI } = await import("./chunk-EQRNFWFY.js");
     renderAuthUI();
     if (window.innerWidth <= 1024) {
-      const { renderMobileBrowse } = await import("./chunk-E24C3YER.js");
+      const { renderMobileBrowse } = await import("./chunk-YD6PWNCT.js");
       renderMobileBrowse();
     } else {
-      const { renderSidebar } = await import("./chunk-CHBSWS6D.js");
+      const { renderSidebar } = await import("./chunk-BJ5ZMAYB.js");
       renderSidebar();
     }
     await appendSecretUnlockDelighter(data.themeName || "Easter Egg");

@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://dexthemes.com">
-    <img src="logo-github-transparent.png" alt="DexThemes" width="200">
+    <img src="logos/logo-github-transparent.png" alt="DexThemes" width="200">
   </a>
 </p>
 
@@ -49,7 +49,9 @@ Open [http://127.0.0.1:4173/](http://127.0.0.1:4173/) and you're in.
 
 ```
 index.html                 → App shell
-index.template.html        → Source template for the generated shell
+templates/                 → Source templates for the generated shell and service worker
+  index.template.html      → Source template for the generated shell
+  sw.template.js           → Source template for the generated service worker
 styles.css                 → Manifest entry for domain-scoped stylesheets
 styles/                    → CSS split by domain (tokens, layout, sidebar, preview, builder, mobile, overlays)
 src/                       → Frontend source modules
@@ -81,8 +83,8 @@ convex/                    → Backend (Convex) — auth, likes, community theme
   themes.ts                → Community theme submissions
   http.ts                  → HTTP route composition entrypoint
 api/                       → Vercel edge/serverless endpoints (`/api/themes`, OG, share, warm-cache)
-themes.schema.json         → JSON schema for theme submissions
-theme-submission-example.json → Example contribution payload
+docs/themes.schema.json    → JSON schema for theme submissions
+docs/theme-submission-example.json → Example contribution payload
 ```
 
 ## Theme format

@@ -61,7 +61,7 @@ function mobileDoSubmit() {
     const builderName = document.getElementById("builder-name");
     if (builderName) builderName.value = nameInput.value.trim();
     dismissMobileSubmitModal();
-    import("./chunk-NO7TIH5H.js").then((m) => {
+    import("./chunk-HPWGRNGB.js").then((m) => {
       if (m.submitFromBuilder) {
         m.submitFromBuilder().catch(() => {
         });

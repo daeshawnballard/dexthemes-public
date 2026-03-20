@@ -377,7 +377,7 @@ function initPreviewChat() {
     userMsg.style.color = v.ink;
     userMsg.textContent = text;
     chat.appendChild(userMsg);
-    void import("./chunk-DT4PJQZT.js").then((m) => m.recordSecretInteraction("dtx.shell.4"));
+    void import("./chunk-AA5TYRXA.js").then((m) => m.recordSecretInteraction("dtx.shell.4"));
     if (isSupportersPrompt(text)) {
       await renderSupportersDelighter(chat, v.ink);
       return;

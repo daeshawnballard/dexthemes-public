@@ -15,7 +15,7 @@ import {
   toggleFilterDropdown,
   toggleSortDropdown,
   toggleSubgroup
-} from "./chunk-ORYVDDEU.js";
+} from "./chunk-CAOOIVHI.js";
 import {
   applyPreview,
   applyShellTheme
@@ -25,8 +25,8 @@ import {
   grantUnlockAction,
   initStatsig,
   trackEvent
-} from "./chunk-AS4UEZ2Z.js";
-import "./chunk-BGJQVKXT.js";
+} from "./chunk-623EO64G.js";
+import "./chunk-NLYGQIT6.js";
 import {
   loadApiModule,
   loadAuthModule,
@@ -36,7 +36,7 @@ import {
   loadMobileModule,
   loadPreviewActionsModule,
   loadPreviewShellModule
-} from "./chunk-3EUCQPQS.js";
+} from "./chunk-7HISW65R.js";
 import "./chunk-AOBV4U4T.js";
 import {
   currentUser,
@@ -141,7 +141,7 @@ async function dispatchAction(action, element, event) {
     case "mobile-switch-subgroup":
       return loadMobileBrowseModule().then((m) => m.mobileSwitchSubgroup(element.dataset.subgroup || "all"));
     case "builder-mobile-submit":
-      return import("./chunk-IUOWLFE2.js").then((m) => m.mobileStartSubmit());
+      return import("./chunk-NSGG3EWS.js").then((m) => m.mobileStartSubmit());
     case "dismiss-coc":
       localStorage.setItem("dexthemes-coc-seen", "1");
       element.closest(".coc-prompt")?.remove();
@@ -159,27 +159,27 @@ async function dispatchAction(action, element, event) {
     case "builder-apply-codex":
       return loadBuilderModule().then((m) => m.applyBuilderToCodex());
     case "builder-submit":
-      return import("./chunk-DDGQUEG2.js").then((m) => m.submitFromBuilder());
+      return import("./chunk-ZOWIOQNX.js").then((m) => m.submitFromBuilder());
     case "builder-update-color":
       return loadBuilderModule().then((m) => m.updateBuilderColor(element.dataset.colorKey || "", element.value || ""));
     case "submit-json-close":
-      return import("./chunk-DDGQUEG2.js").then((m) => m.dismissSubmitJsonModal());
+      return import("./chunk-ZOWIOQNX.js").then((m) => m.dismissSubmitJsonModal());
     case "submit-json-confirm":
-      return import("./chunk-DDGQUEG2.js").then((m) => m.submitJsonFromModal());
+      return import("./chunk-ZOWIOQNX.js").then((m) => m.submitJsonFromModal());
     case "dismiss-mobile-submit":
-      return import("./chunk-IUOWLFE2.js").then((m) => m.dismissMobileSubmitModal());
+      return import("./chunk-NSGG3EWS.js").then((m) => m.dismissMobileSubmitModal());
     case "do-mobile-submit":
-      return import("./chunk-IUOWLFE2.js").then((m) => m.mobileDoSubmit());
+      return import("./chunk-NSGG3EWS.js").then((m) => m.mobileDoSubmit());
     case "report-theme-name":
-      return import("./chunk-UT4SS4HW.js").then((m) => m.reportThemeName());
+      return import("./chunk-YJZQAWSB.js").then((m) => m.reportThemeName());
     case "confirm-report-theme-name":
-      return import("./chunk-UT4SS4HW.js").then((m) => m.confirmThemeNameReport());
+      return import("./chunk-YJZQAWSB.js").then((m) => m.confirmThemeNameReport());
     case "cancel-report-theme-name":
-      return import("./chunk-UT4SS4HW.js").then((m) => m.cancelThemeNameReport());
+      return import("./chunk-YJZQAWSB.js").then((m) => m.cancelThemeNameReport());
     case "run-supporter-unlock":
       return loadPreviewActionsModule().then((m) => m.runSupporterUnlockFlow(element.dataset.unlockAction || "buy_coffee"));
     case "run-unlock-action":
-      return import("./chunk-2BWM4ITN.js").then((m) => m.onUnlockAction(element.dataset.unlockAction || ""));
+      return import("./chunk-OI76LFNA.js").then((m) => m.onUnlockAction(element.dataset.unlockAction || ""));
     case "run-api-unlock":
       return loadPreviewActionsModule().then((m) => m.runApiUnlockFlow(element.dataset.unlockAction || "api"));
     case "run-agent-unlock":
@@ -201,7 +201,7 @@ async function dispatchAction(action, element, event) {
     case "run-install-unlock":
       return loadPreviewActionsModule().then((m) => m.runInstallUnlockFlow(element.dataset.unlockAction || "install"));
     case "dismiss-supporter-prompt":
-      return import("./chunk-2BWM4ITN.js").then((m) => m.dismissSupporterPrompt());
+      return import("./chunk-OI76LFNA.js").then((m) => m.dismissSupporterPrompt());
     default:
       return void 0;
   }
@@ -290,7 +290,7 @@ async function ensureMobileModule() {
 }
 async function ensurePreviewChatInitialized() {
   if (previewChatInitialized) return;
-  const { initPreviewChat } = await import("./chunk-DYFUO3KF.js");
+  const { initPreviewChat } = await import("./chunk-V66HNG7U.js");
   initPreviewChat();
   previewChatInitialized = true;
 }
@@ -312,9 +312,9 @@ async function initDesktopPreviewShell() {
   preview.renderRightPanel();
   preview.initWindowDots();
   primePreviewChatOnInteraction();
-  const attribution = await import("./chunk-UT4SS4HW.js");
+  const attribution = await import("./chunk-YJZQAWSB.js");
   attribution.syncAttributionOverlay();
-  const chat = await import("./chunk-DYFUO3KF.js");
+  const chat = await import("./chunk-V66HNG7U.js");
   await preview.checkOnboarding();
   chat.maybeShowWelcomeMessage();
 }

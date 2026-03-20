@@ -1,7 +1,7 @@
 import {
   copySupporterClaimToken,
   showSupporterClaimModal
-} from "./chunk-UKQM46BR.js";
+} from "./chunk-BTUJR4WW.js";
 import {
   clearDeferredInstallPrompt,
   getDeferredInstallPrompt
@@ -10,15 +10,15 @@ import {
   renderRightPanel,
   reportThemeName,
   syncAttributionOverlay
-} from "./chunk-264VTVHR.js";
-import "./chunk-UVHJ3RM5.js";
+} from "./chunk-7X5RAJGH.js";
+import "./chunk-EKIPJH3K.js";
 import {
   activateModalFocusTrap,
   deactivateModalFocusTrap
 } from "./chunk-7G6IZZN4.js";
 import {
   renderSidebar
-} from "./chunk-ORYVDDEU.js";
+} from "./chunk-CAOOIVHI.js";
 import {
   applyPreview,
   applyShellTheme,
@@ -31,18 +31,18 @@ import {
   grantUnlockAction,
   showToast,
   trackEvent
-} from "./chunk-AS4UEZ2Z.js";
+} from "./chunk-623EO64G.js";
 import {
   initPreviewChat,
   showInlineSignInPrompt
-} from "./chunk-BGJQVKXT.js";
+} from "./chunk-NLYGQIT6.js";
 import {
   loadAuthModule,
   loadBuilderModule,
   loadLeaderboardModule,
   loadMobileModule,
   loadPreviewShellModule
-} from "./chunk-3EUCQPQS.js";
+} from "./chunk-7HISW65R.js";
 import {
   escapeHtml,
   fallbackCopy
@@ -136,7 +136,7 @@ async function selectThemeById(id) {
     }
     renderSidebar();
     maybeAdvanceMobilePreview();
-    const { showLockedThemeShell } = await import("./chunk-DYFUO3KF.js");
+    const { showLockedThemeShell } = await import("./chunk-V66HNG7U.js");
     showLockedThemeShell(theme, unlockAction);
     track("locked_theme_selected", {
       theme_id: theme.id,

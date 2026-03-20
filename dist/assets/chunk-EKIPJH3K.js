@@ -4,16 +4,16 @@ import {
 } from "./chunk-7G6IZZN4.js";
 import {
   renderSidebar
-} from "./chunk-ORYVDDEU.js";
+} from "./chunk-CAOOIVHI.js";
 import {
   authFetch,
   grantUnlockAction,
   showToast,
   trackEvent
-} from "./chunk-AS4UEZ2Z.js";
+} from "./chunk-623EO64G.js";
 import {
   showSubmitDelighter
-} from "./chunk-BGJQVKXT.js";
+} from "./chunk-NLYGQIT6.js";
 import {
   slugify
 } from "./chunk-AOBV4U4T.js";
@@ -286,8 +286,8 @@ async function submitFromBuilder() {
         setSelectedTheme(existing);
         setSelectedVariant(variant);
       }
-      const { renderRightPanel } = await import("./chunk-5N4HBDCC.js");
-      const { syncAttributionOverlay } = await import("./chunk-UT4SS4HW.js");
+      const { renderRightPanel } = await import("./chunk-7UIHQZZI.js");
+      const { syncAttributionOverlay } = await import("./chunk-YJZQAWSB.js");
       const { applyShellTheme, applyPreview } = await import("./chunk-6B6UELWF.js");
       applyShellTheme(selectedTheme, selectedVariant);
       applyPreview(selectedTheme, selectedVariant);
