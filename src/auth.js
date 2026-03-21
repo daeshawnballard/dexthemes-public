@@ -52,7 +52,7 @@ export async function initAuth() {
       }
       // Auto-grant sign_in unlock on first sign-in
       grantUnlockAction('sign_in');
-      syncStatsigUser();
+      await syncStatsigUser();
       trackEvent('sign_in_completed', null, { provider: data.user.provider, user_id: data.user._id });
     } else {
       clearSessionHint();
@@ -274,11 +274,11 @@ export async function logout() {
   try {
     await authFetch(CONVEX_SITE_URL + '/auth/logout', { method: 'POST' });
   } catch (e) { /* ignore */ }
-  trackEvent('signed_out');
   clearSessionHint();
   clearStoredSessionToken();
   state.setCurrentUser(null);
-  syncStatsigUser();
+  await syncStatsigUser();
+  trackEvent('signed_out');
   renderAuthUI();
   if (state.panelMode === 'builder') {
     const { renderBuilderPanel } = await loadBuilderModule();
